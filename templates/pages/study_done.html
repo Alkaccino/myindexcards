@@ -1,0 +1,74 @@
+{{define "study_done.html"}}
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fertig! - MYIndexCards</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="navbar-brand">🃏 <span>MYIndexCards</span></a>
+            <div class="navbar-links">
+                <span class="navbar-user">{{.User.Username}}</span>
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="study-done">
+            <div class="study-done-icon">🎉</div>
+            <h1 class="study-done-title">Geschafft!</h1>
+            <p class="study-done-text">
+                Alle Karten in <strong>{{.Deck.Name}}</strong> sind für heute gelernt.
+            </p>
+
+            {{if gt .Total 0}}
+            <div class="study-summary">
+                <h3 class="study-summary-title">📊 Zusammenfassung</h3>
+                <p class="study-summary-total"><strong>{{.Total}}</strong> Bewertungen abgegeben</p>
+                <div class="study-summary-bars">
+                    {{if gt .R5 0}}<div class="summary-row">
+                        <span class="summary-label">🌟 Perfekt</span>
+                        <div class="summary-bar-bg"><div class="summary-bar-fill summary-bar-5" style="width: {{percent .R5 .Total}}%"></div></div>
+                        <span class="summary-count">{{.R5}}</span>
+                    </div>{{end}}
+                    {{if gt .R4 0}}<div class="summary-row">
+                        <span class="summary-label">😊 Gut</span>
+                        <div class="summary-bar-bg"><div class="summary-bar-fill summary-bar-4" style="width: {{percent .R4 .Total}}%"></div></div>
+                        <span class="summary-count">{{.R4}}</span>
+                    </div>{{end}}
+                    {{if gt .R3 0}}<div class="summary-row">
+                        <span class="summary-label">🤔 Okay</span>
+                        <div class="summary-bar-bg"><div class="summary-bar-fill summary-bar-3" style="width: {{percent .R3 .Total}}%"></div></div>
+                        <span class="summary-count">{{.R3}}</span>
+                    </div>{{end}}
+                    {{if gt .R2 0}}<div class="summary-row">
+                        <span class="summary-label">😰 Schwer</span>
+                        <div class="summary-bar-bg"><div class="summary-bar-fill summary-bar-2" style="width: {{percent .R2 .Total}}%"></div></div>
+                        <span class="summary-count">{{.R2}}</span>
+                    </div>{{end}}
+                    {{if gt .R1 0}}<div class="summary-row">
+                        <span class="summary-label">😵 Keine Ahnung</span>
+                        <div class="summary-bar-bg"><div class="summary-bar-fill summary-bar-1" style="width: {{percent .R1 .Total}}%"></div></div>
+                        <span class="summary-count">{{.R1}}</span>
+                    </div>{{end}}
+                </div>
+            </div>
+            {{end}}
+
+            <div class="btn-group" style="justify-content: center;">
+                <a href="/deck/{{.Deck.ID}}" class="btn btn-secondary">← Zum Stapel</a>
+                {{if .HasCards}}
+                <a href="/study/{{.Deck.ID}}?all=1" class="btn btn-secondary">🔁 Alle wiederholen</a>
+                {{end}}
+                <a href="/" class="btn btn-primary">🏠 Dashboard</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+{{end}}

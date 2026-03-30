@@ -1,0 +1,65 @@
+{{define "dashboard.html"}}
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - MYIndexCards</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="navbar-brand">🃏 <span>MYIndexCards</span></a>
+            <div class="navbar-links">
+                <a href="/import">📥 Import</a>
+                <a href="/export/all">📤 Export</a>
+                <span class="navbar-user">{{.User.Username}}</span>
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Meine Stapel</h1>
+                <p class="page-subtitle">Wähle einen Stapel zum Lernen oder erstelle einen neuen</p>
+            </div>
+            <a href="/deck/create" class="btn btn-primary">+ Neuer Stapel</a>
+        </div>
+
+        {{if .Decks}}
+        <div class="deck-grid">
+            {{range .Decks}}
+            <a href="/deck/{{.ID}}" class="deck-card" style="--deck-color: {{.Color}}">
+                <div class="deck-card-name">
+                    <span class="color-preview" style="background: {{.Color}}"></span>
+                    {{.Name}}
+                </div>
+                <div class="deck-card-stats">
+                    <div class="deck-stat">
+                        📇 <span class="deck-stat-value">{{cardCount .ID $.User.ID}}</span> Karten
+                    </div>
+                    <div class="deck-stat">
+                        📝 <span class="deck-stat-value deck-stat-due">{{dueCount .ID $.User.ID}}</span> fällig
+                    </div>
+                </div>
+            </a>
+            {{end}}
+        </div>
+        {{else}}
+        <div class="empty-state">
+            <div class="empty-state-icon">📚</div>
+            <div class="empty-state-title">Noch keine Stapel</div>
+            <p>Erstelle deinen ersten Kartenstapel und fange an zu lernen!</p>
+            <br>
+            <a href="/deck/create" class="btn btn-primary">+ Neuer Stapel</a>
+        </div>
+        {{end}}
+    </div>
+
+    <footer class="footer">MYIndexCards &mdash; Lernen leicht gemacht</footer>
+</body>
+</html>
+{{end}}

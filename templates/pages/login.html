@@ -1,0 +1,43 @@
+{{define "login.html"}}
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - MYIndexCards</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-box">
+            <h1 class="auth-title">🃏 <span style="background: linear-gradient(135deg, #6c5ce7, #a29bfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">MYIndexCards</span></h1>
+            <p class="auth-subtitle">Melde dich an, um weiterzulernen</p>
+
+            {{if .Error}}
+            <div class="alert alert-error">{{.Error}}</div>
+            {{end}}
+
+            {{if .Message}}
+            <div class="alert alert-success">{{.Message}}</div>
+            {{end}}
+
+            <form method="POST" action="/login">
+                <div class="form-group">
+                    <label class="form-label" for="username">Benutzername</label>
+                    <input class="form-input" type="text" id="username" name="username" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="password">Passwort</label>
+                    <input class="form-input" type="password" id="password" name="password" required autocomplete="current-password">
+                </div>
+                <button class="btn btn-primary btn-full" type="submit">Einloggen</button>
+            </form>
+
+            <p class="auth-footer">
+                Noch kein Konto? <a href="/register">Jetzt registrieren</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+{{end}}

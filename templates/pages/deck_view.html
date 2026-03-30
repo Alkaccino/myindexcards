@@ -1,0 +1,78 @@
+{{define "deck_view.html"}}
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Deck.Name}} - MYIndexCards</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="navbar-brand">🃏 <span>MYIndexCards</span></a>
+            <div class="navbar-links">
+                <span class="navbar-user">{{.User.Username}}</span>
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">
+                    <span class="color-preview" style="background: {{.Deck.Color}}"></span>
+                    {{.Deck.Name}}
+                </h1>
+                <p class="page-subtitle">
+                    {{cardCount .Deck.ID .User.ID}} Karten &bull;
+                    {{dueCount .Deck.ID .User.ID}} fällig
+                </p>
+            </div>
+            <div class="btn-group">
+                <a href="/study/{{.Deck.ID}}" class="btn btn-primary">▶ Lernen</a>
+                <a href="/card/create/{{.Deck.ID}}" class="btn btn-secondary">+ Karte</a>
+                <a href="/deck/edit/{{.Deck.ID}}" class="btn btn-secondary">✏️ Bearbeiten</a>
+                <a href="/export/{{.Deck.ID}}" class="btn btn-secondary">📤 Export</a>
+                <form method="POST" action="/deck/delete/{{.Deck.ID}}" class="inline-form"
+                      onsubmit="return confirm('Stapel wirklich löschen? Alle Karten gehen verloren.')">
+                    <button type="submit" class="btn btn-danger btn-sm">🗑</button>
+                </form>
+            </div>
+        </div>
+
+        <a href="/" class="btn btn-secondary btn-sm" style="margin-bottom: 1.5rem;">← Alle Stapel</a>
+
+        {{if .Cards}}
+        <div class="card-list">
+            {{range .Cards}}
+            <div class="card-item">
+                <div class="card-item-content">
+                    <div class="card-item-front">{{formatCard .Front}}</div>
+                    <div class="card-item-back">{{formatCard .Back}}</div>
+                </div>
+                <div class="card-item-actions">
+                    <a href="/card/edit/{{.ID}}" class="btn btn-secondary btn-sm">✏️</a>
+                    <form method="POST" action="/card/delete/{{.ID}}" class="inline-form">
+                        <button type="submit" class="btn btn-danger btn-sm">🗑</button>
+                    </form>
+                </div>
+            </div>
+            {{end}}
+        </div>
+        {{else}}
+        <div class="empty-state">
+            <div class="empty-state-icon">🃏</div>
+            <div class="empty-state-title">Noch keine Karten</div>
+            <p>Füge deine erste Karteikarte hinzu!</p>
+            <br>
+            <a href="/card/create/{{.Deck.ID}}" class="btn btn-primary">+ Neue Karte</a>
+        </div>
+        {{end}}
+    </div>
+
+    <footer class="footer">MYIndexCards &mdash; Lernen leicht gemacht</footer>
+</body>
+</html>
+{{end}}

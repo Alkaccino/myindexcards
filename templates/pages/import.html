@@ -1,0 +1,51 @@
+{{define "import.html"}}
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import - MYIndexCards</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="navbar-brand">🃏 <span>MYIndexCards</span></a>
+            <div class="navbar-links">
+                <span class="navbar-user">{{.User.Username}}</span>
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">📥 Karten importieren</h1>
+            <a href="/" class="btn btn-secondary">← Dashboard</a>
+        </div>
+
+        {{if .Error}}
+        <div class="alert alert-error">{{.Error}}</div>
+        {{end}}
+
+        <div class="auth-box" style="max-width: 550px;">
+            <form method="POST" action="/import" enctype="multipart/form-data">
+                <div class="import-zone">
+                    <div class="import-icon">📁</div>
+                    <p>Wähle eine <strong>MYIndexCards JSON-Datei</strong> zum Importieren</p>
+                    <br>
+                    <input type="file" name="file" accept=".json" required class="form-input">
+                </div>
+                <button class="btn btn-primary btn-full" type="submit">Importieren</button>
+            </form>
+
+            <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border);">
+                <p style="color: var(--text-muted); font-size: 0.85rem;">
+                    <strong>Tipp:</strong> Du kannst Stapel exportieren, indem du auf dem Dashboard oder in der Stapelansicht auf „📤 Export" klickst. Die exportierte JSON-Datei kann hier wieder importiert werden.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+{{end}}

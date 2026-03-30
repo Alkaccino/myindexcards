@@ -1,0 +1,94 @@
+{{define "study.html"}}
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lernen: {{.Deck.Name}} - MYIndexCards</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="navbar-brand">🃏 <span>MYIndexCards</span></a>
+            <div class="navbar-links">
+                <a href="/deck/{{.Deck.ID}}">← Zurück zum Stapel</a>
+                <span class="navbar-user">{{.User.Username}}</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="study-container">
+            <p class="study-progress">
+                {{if .AllMode}}🔁{{else}}📝{{end}} Noch <strong>{{.Remaining}}</strong> Karte{{if ne .Remaining 1}}n{{end}} {{if .AllMode}}übrig{{else}}fällig{{end}} in <strong>{{.Deck.Name}}</strong>
+            </p>
+
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" style="width: {{.ProgressPct}}%"></div>
+            </div>
+            <p class="progress-text">{{.Done}} / {{.Total}} geschafft</p>
+
+            <div class="flashcard">
+                <div class="flashcard-inner">
+                    <span class="flashcard-label">Frage</span>
+                    <div class="flashcard-text">{{formatCard .Card.Front}}</div>
+
+                    {{if .Reveal}}
+                    <div class="flashcard-answer">
+                        <span class="flashcard-label">Antwort</span>
+                        <div class="flashcard-text">{{formatCard .Card.Back}}</div>
+                    </div>
+                    {{end}}
+                </div>
+            </div>
+
+            {{if .Reveal}}
+            <p style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.9rem;">
+                Wie gut wusstest du die Antwort?
+            </p>
+            <div class="rating-container">
+                <form method="POST" action="/study/rate" style="display:contents;">
+                    <input type="hidden" name="card_id" value="{{$.Card.ID}}">
+                    <input type="hidden" name="deck_id" value="{{$.Deck.ID}}">
+                    <input type="hidden" name="r1" value="{{$.R1}}">
+                    <input type="hidden" name="r2" value="{{$.R2}}">
+                    <input type="hidden" name="r3" value="{{$.R3}}">
+                    <input type="hidden" name="r4" value="{{$.R4}}">
+                    <input type="hidden" name="r5" value="{{$.R5}}">
+                    {{if $.AllMode}}<input type="hidden" name="all" value="1">
+                    <input type="hidden" name="since" value="{{$.Since}}">{{end}}
+                    {{if $.T}}<input type="hidden" name="t" value="{{$.T}}">{{end}}
+
+                    <button type="submit" name="rating" value="1" class="rating-btn" data-rating="1">
+                        <span class="rating-emoji">😵</span>
+                        <span class="rating-label">Keine Ahnung</span>
+                    </button>
+                    <button type="submit" name="rating" value="2" class="rating-btn" data-rating="2">
+                        <span class="rating-emoji">😰</span>
+                        <span class="rating-label">Schwer</span>
+                    </button>
+                    <button type="submit" name="rating" value="3" class="rating-btn" data-rating="3">
+                        <span class="rating-emoji">🤔</span>
+                        <span class="rating-label">Okay</span>
+                    </button>
+                    <button type="submit" name="rating" value="4" class="rating-btn" data-rating="4">
+                        <span class="rating-emoji">😊</span>
+                        <span class="rating-label">Gut</span>
+                    </button>
+                    <button type="submit" name="rating" value="5" class="rating-btn" data-rating="5">
+                        <span class="rating-emoji">🌟</span>
+                        <span class="rating-label">Perfekt</span>
+                    </button>
+                </form>
+            </div>
+            {{else}}
+            <a href="/study/{{.Deck.ID}}?reveal=1&card={{.Card.ID}}&r1={{.R1}}&r2={{.R2}}&r3={{.R3}}&r4={{.R4}}&r5={{.R5}}{{if .AllMode}}&all=1&since={{.Since}}{{end}}{{if .T}}&t={{.T}}{{end}}" class="btn btn-primary" style="font-size: 1.1rem; padding: 0.9rem 2.5rem;">
+                Antwort zeigen
+            </a>
+            {{end}}
+        </div>
+    </div>
+</body>
+</html>
+{{end}}

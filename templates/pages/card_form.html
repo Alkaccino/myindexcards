@@ -1,0 +1,804 @@
+{{define "card_form.html"}}
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{if .IsEdit}}Karte bearbeiten{{else}}Neue Karte{{end}} - MYIndexCards</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="navbar-brand">🃏 <span>MYIndexCards</span></a>
+            <div class="navbar-links">
+                <span class="navbar-user">{{.User.Username}}</span>
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">{{if .IsEdit}}Karte bearbeiten{{else}}Neue Karte{{end}}</h1>
+            <a href="/deck/{{.Deck.ID}}" class="btn btn-secondary">← Zurück zu {{.Deck.Name}}</a>
+        </div>
+
+        {{if .Error}}
+        <div class="alert alert-error">{{.Error}}</div>
+        {{end}}
+
+        <div class="editor-container">
+            <form method="POST" id="card-form" action="{{if .IsEdit}}/card/edit/{{.Card.ID}}{{else}}/card/create/{{.Deck.ID}}{{end}}">
+                <div class="form-group">
+                    <label class="form-label" for="front">Vorderseite (Frage)</label>
+                    <textarea class="form-textarea" id="front" name="front" required
+                              placeholder="Was möchtest du abfragen?">{{if .IsEdit}}{{.Card.Front}}{{end}}</textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Rückseite (Antwort)</label>
+                    <!-- Toolbar -->
+                    <div class="editor-toolbar" id="toolbar">
+                        <button type="button" class="tb-btn" data-action="bold" title="Fett">
+                            <span class="tb-icon"><b>B</b></span>
+                        </button>
+                        <button type="button" class="tb-btn" data-action="highlight" title="Hervorheben">
+                            <span class="tb-icon" style="background:#facc15;color:#000;padding:0 3px;border-radius:2px;font-size:0.75rem;">H</span>
+                        </button>
+                        <button type="button" class="tb-btn" data-action="inline-code" title="Inline-Code">
+                            <span class="tb-icon">&lt;/&gt;</span>
+                        </button>
+                        <span class="tb-sep"></span>
+                        <button type="button" class="tb-btn" data-action="code-block" title="Code-Block">
+                            <span class="tb-icon">⌨</span><span class="tb-label">Code</span>
+                        </button>
+                        <button type="button" class="tb-btn" data-action="table" title="Tabelle einfügen">
+                            <span class="tb-icon">▦</span><span class="tb-label">Tabelle</span>
+                        </button>
+                        <button type="button" class="tb-btn" data-action="list" title="Liste einfügen">
+                            <span class="tb-icon">•≡</span><span class="tb-label">Liste</span>
+                        </button>
+                        <button type="button" class="tb-btn" data-action="image" title="Bild einfügen">
+                            <span class="tb-icon">🖼</span><span class="tb-label">Bild</span>
+                        </button>
+                        <span class="tb-sep"></span>
+                        <button type="button" class="tb-btn" data-action="divider" title="Trennlinie">
+                            <span class="tb-icon">―</span>
+                        </button>
+                    </div>
+
+                    <!-- Config panels (appear below toolbar) -->
+                    <div class="editor-config" id="table-config">
+                        <label>Zeilen <input type="number" id="tc-rows" value="2" min="1" max="20"></label>
+                        <label>Spalten <input type="number" id="tc-cols" value="2" min="1" max="10"></label>
+                        <label class="ec-check"><input type="checkbox" id="tc-head" checked> Kopfzeile</label>
+                        <label class="ec-check"><input type="checkbox" id="tc-rowhead"> Zeilen-Überschr.</label>
+                        <button type="button" class="ec-btn" id="tc-go">Einfügen</button>
+                        <button type="button" class="ec-btn ec-cancel" id="tc-cancel">✕</button>
+                    </div>
+                    <div class="editor-config" id="image-config">
+                        <label>URL <input type="text" id="ic-url" placeholder="https://..." class="ec-input-wide"></label>
+                        <label>Alt <input type="text" id="ic-alt" placeholder="Beschreibung" class="ec-input-med"></label>
+                        <button type="button" class="ec-btn" id="ic-go">Einfügen</button>
+                        <button type="button" class="ec-btn ec-cancel" id="ic-cancel">✕</button>
+                    </div>
+
+                    <!-- WYSIWYG Editor -->
+                    <div class="editor-wysiwyg" id="editor" contenteditable="true"></div>
+
+                    <!-- Hidden field for form submission -->
+                    <textarea name="back" id="back-data" style="display:none;">{{if .IsEdit}}{{.Card.Back}}{{end}}</textarea>
+                </div>
+                <button class="btn btn-primary btn-full" type="submit" style="margin-top:0.5rem;">
+                    {{if .IsEdit}}Speichern{{else}}Karte erstellen{{end}}
+                </button>
+            </form>
+
+            <details class="format-ref">
+                <summary class="format-ref-toggle">📖 Markup-Referenz (für Profis)</summary>
+                <div class="format-ref-content">
+                    <div class="ref-section">
+                        <h4>Text-Formatierung</h4>
+                        <pre class="ref-example">**fetter Text**
+==hervorgehobener Text==
+`inline code`</pre>
+                    </div>
+                    <div class="ref-section">
+                        <h4>Code-Block</h4>
+                        <pre class="ref-example">```
+fmt.Println("Hallo")
+```</pre>
+                    </div>
+                    <div class="ref-section">
+                        <h4>Aufzählung</h4>
+                        <pre class="ref-example">• Erster Punkt
+• Zweiter Punkt</pre>
+                    </div>
+                    <div class="ref-section">
+                        <h4>Tabelle mit Überschriften</h4>
+                        <pre class="ref-example">| Kopf 1 | Kopf 2 |
+|---|---|
+| Wert A | Wert B |</pre>
+                    </div>
+                    <div class="ref-section">
+                        <h4>Bild &amp; Trennlinie</h4>
+                        <pre class="ref-example">![Alt](https://url/bild.png)
+---</pre>
+                    </div>
+                    <div class="ref-section">
+                        <h4>Zeilen-Überschriften</h4>
+                        <pre class="ref-example">| | Sp1 | Sp2 |
+|---|---|---|
+| Z1 | A | B |</pre>
+                        <p class="ref-hint">Erste Kopfzelle leer → 1. Spalte = Überschrift</p>
+                    </div>
+                </div>
+            </details>
+        </div>
+    </div>
+
+    <script>
+    (function(){
+        var editor = document.getElementById('editor');
+        var dataField = document.getElementById('back-data');
+        var form = document.getElementById('card-form');
+
+        // ==================== INIT ====================
+        var raw = dataField.value;
+        if (raw && raw.trim()) {
+            editor.innerHTML = markupToVisual(raw);
+        }
+        ensureTrailingBr();
+
+        // ==================== SUBMIT ====================
+        form.addEventListener('submit', function(e) {
+            var markup = visualToMarkup(editor);
+            dataField.value = markup;
+            if (!markup.trim()) {
+                e.preventDefault();
+                editor.style.borderColor = '#f87171';
+                editor.focus();
+                setTimeout(function(){ editor.style.borderColor = ''; }, 2000);
+            }
+        });
+
+        // ==================== PASTE ====================
+        editor.addEventListener('paste', function(e) {
+            e.preventDefault();
+            var text = (e.clipboardData || window.clipboardData).getData('text/plain');
+            document.execCommand('insertText', false, text);
+        });
+
+        // ==================== KEYDOWN ====================
+        editor.addEventListener('keydown', function(e) {
+            // Enter
+            if (e.key === 'Enter' && !e.shiftKey) {
+                var sel = window.getSelection();
+                var li = closest(sel.anchorNode, 'LI');
+                if (li) {
+                    if (!li.textContent.trim() && li === li.parentNode.lastElementChild) {
+                        e.preventDefault();
+                        var ul = li.parentNode;
+                        ul.removeChild(li);
+                        if (ul.children.length === 0) ul.parentNode.removeChild(ul);
+                        var p = document.createElement('div');
+                        p.innerHTML = '<br>';
+                        if (ul.parentNode) ul.parentNode.insertBefore(p, ul.nextSibling);
+                        else editor.appendChild(p);
+                        setCursorStart(p);
+                    }
+                    return;
+                }
+                var pre = closest(sel.anchorNode, 'PRE');
+                if (pre) return;
+                e.preventDefault();
+                document.execCommand('insertLineBreak');
+                return;
+            }
+
+            // Tab: navigate table cells
+            if (e.key === 'Tab') {
+                var sel = window.getSelection();
+                var td = closest(sel.anchorNode, 'TD') || closest(sel.anchorNode, 'TH');
+                if (td) {
+                    e.preventDefault();
+                    var next = e.shiftKey ? prevCell(td) : nextCell(td);
+                    if (next) selectAllIn(next);
+                }
+            }
+
+            // Escape: exit code block / table
+            if (e.key === 'Escape') {
+                var sel = window.getSelection();
+                var block = closest(sel.anchorNode, 'DIV');
+                if (block && block.classList && block.classList.contains('ed-block')) {
+                    var p = block.nextElementSibling;
+                    if (!p) { p = document.createElement('div'); p.innerHTML = '<br>'; editor.appendChild(p); }
+                    setCursorStart(p);
+                }
+            }
+        });
+
+        // ==================== BLOCK CONTROLS (event delegation) ====================
+        editor.addEventListener('click', function(e) {
+            var ctrl = e.target.closest('.ed-ctrl');
+            if (!ctrl) return;
+            e.preventDefault();
+            e.stopPropagation();
+            var block = ctrl.closest('.ed-block');
+            var act = ctrl.dataset.act;
+            if (!block || !act) return;
+            var table = block.querySelector('table');
+
+            switch(act) {
+                case 'del-block':
+                    var next = block.nextElementSibling;
+                    block.parentNode.removeChild(block);
+                    if (next) setCursorStart(next);
+                    break;
+                case 'add-row':
+                    if (table) addTableRow(table);
+                    break;
+                case 'add-col':
+                    if (table) addTableCol(table);
+                    break;
+                case 'del-row':
+                    if (table) delTableRow(table);
+                    break;
+                case 'del-col':
+                    if (table) delTableCol(table);
+                    break;
+            }
+        });
+
+        // ==================== TOOLBAR ====================
+        document.getElementById('toolbar').addEventListener('click', function(e) {
+            var btn = e.target.closest('.tb-btn');
+            if (!btn) return;
+            var action = btn.dataset.action;
+            switch(action) {
+                case 'bold': wrapSel('strong'); break;
+                case 'highlight': wrapSel('mark'); break;
+                case 'inline-code': wrapSel('code'); break;
+                case 'divider': insertDivider(); break;
+                case 'code-block': insertCodeBlock(); break;
+                case 'table': showConfig('table-config'); break;
+                case 'list': insertList(); break;
+                case 'image': showConfig('image-config'); break;
+            }
+        });
+
+        // ==================== TABLE CONFIG ====================
+        document.getElementById('tc-go').addEventListener('click', function() {
+            var rows = parseInt(document.getElementById('tc-rows').value) || 2;
+            var cols = parseInt(document.getElementById('tc-cols').value) || 2;
+            var hasHead = document.getElementById('tc-head').checked;
+            var hasRowHead = document.getElementById('tc-rowhead').checked;
+            doInsertTable(rows, cols, hasHead, hasRowHead);
+            hideConfig('table-config');
+        });
+        document.getElementById('tc-cancel').addEventListener('click', function(){ hideConfig('table-config'); });
+
+        // ==================== IMAGE CONFIG ====================
+        document.getElementById('ic-go').addEventListener('click', function() {
+            var url = document.getElementById('ic-url').value.trim();
+            var alt = document.getElementById('ic-alt').value.trim() || 'Bild';
+            if (!url) return;
+            insertImage(url, alt);
+            hideConfig('image-config');
+            document.getElementById('ic-url').value = '';
+            document.getElementById('ic-alt').value = '';
+        });
+        document.getElementById('ic-cancel').addEventListener('click', function(){ hideConfig('image-config'); });
+
+        // ==================== CONFIG SHOW/HIDE ====================
+        function showConfig(id) {
+            document.querySelectorAll('.editor-config').forEach(function(el){ el.style.display = 'none'; });
+            document.getElementById(id).style.display = 'flex';
+        }
+        function hideConfig(id) { document.getElementById(id).style.display = 'none'; }
+
+        // ==================== INSERT FUNCTIONS ====================
+        function doInsertTable(rows, cols, hasHead, hasRowHead) {
+            var wrap = document.createElement('div');
+            wrap.className = 'ed-block';
+            wrap.contentEditable = 'false';
+
+            var ctrls = document.createElement('div');
+            ctrls.className = 'ed-block-controls';
+            ctrls.innerHTML = '<button type="button" class="ed-ctrl" data-act="add-row" title="Zeile hinzufügen">+ ↓</button>'
+                + '<button type="button" class="ed-ctrl" data-act="add-col" title="Spalte hinzufügen">+ →</button>'
+                + '<button type="button" class="ed-ctrl" data-act="del-row" title="Zeile entfernen">− ↓</button>'
+                + '<button type="button" class="ed-ctrl" data-act="del-col" title="Spalte entfernen">− →</button>'
+                + '<button type="button" class="ed-ctrl ed-ctrl-del" data-act="del-block" title="Löschen">✕</button>';
+            wrap.appendChild(ctrls);
+
+            var tbl = document.createElement('table');
+            tbl.className = 'ed-table';
+            if (hasRowHead) tbl.dataset.rowHeader = '1';
+
+            if (hasHead) {
+                var thead = document.createElement('thead');
+                var tr = document.createElement('tr');
+                for (var c = 0; c < cols; c++) {
+                    var th = document.createElement('th');
+                    th.contentEditable = 'true';
+                    th.innerHTML = '<br>';
+                    tr.appendChild(th);
+                }
+                thead.appendChild(tr);
+                tbl.appendChild(thead);
+            }
+
+            var tbody = document.createElement('tbody');
+            for (var r = 0; r < rows; r++) {
+                var tr = document.createElement('tr');
+                for (var c = 0; c < cols; c++) {
+                    var cell;
+                    if (c === 0 && hasRowHead) {
+                        cell = document.createElement('th');
+                    } else {
+                        cell = document.createElement('td');
+                    }
+                    cell.contentEditable = 'true';
+                    cell.innerHTML = '<br>';
+                    tr.appendChild(cell);
+                }
+                tbody.appendChild(tr);
+            }
+            tbl.appendChild(tbody);
+            wrap.appendChild(tbl);
+            insertBlock(wrap);
+            var firstCell = tbl.querySelector('[contenteditable="true"]');
+            if (firstCell) setCursorStart(firstCell);
+        }
+
+        function insertList() {
+            var ul = document.createElement('ul');
+            ul.className = 'ed-list';
+            for (var i = 0; i < 3; i++) {
+                var li = document.createElement('li');
+                li.innerHTML = '<br>';
+                ul.appendChild(li);
+            }
+            insertBlock(ul);
+            setCursorStart(ul.firstChild);
+        }
+
+        function insertCodeBlock() {
+            var wrap = document.createElement('div');
+            wrap.className = 'ed-block';
+            wrap.contentEditable = 'false';
+
+            var ctrls = document.createElement('div');
+            ctrls.className = 'ed-block-controls';
+            ctrls.innerHTML = '<span class="ed-block-label">Code</span>'
+                + '<button type="button" class="ed-ctrl ed-ctrl-del" data-act="del-block" title="Löschen">✕</button>';
+            wrap.appendChild(ctrls);
+
+            var pre = document.createElement('pre');
+            pre.className = 'ed-code';
+            pre.contentEditable = 'true';
+            pre.textContent = '';
+            wrap.appendChild(pre);
+
+            insertBlock(wrap);
+            pre.focus();
+        }
+
+        function insertImage(url, alt) {
+            var wrap = document.createElement('div');
+            wrap.className = 'ed-block';
+            wrap.contentEditable = 'false';
+
+            var ctrls = document.createElement('div');
+            ctrls.className = 'ed-block-controls';
+            ctrls.innerHTML = '<button type="button" class="ed-ctrl ed-ctrl-del" data-act="del-block" title="Löschen">✕</button>';
+            wrap.appendChild(ctrls);
+
+            var img = document.createElement('img');
+            img.className = 'ed-img';
+            img.src = url;
+            img.alt = alt;
+            wrap.appendChild(img);
+
+            insertBlock(wrap);
+        }
+
+        function insertDivider() {
+            var hr = document.createElement('hr');
+            hr.className = 'ed-divider';
+            insertBlock(hr);
+        }
+
+        function insertBlock(el) {
+            var sel = window.getSelection();
+            var target = null;
+            if (sel.rangeCount > 0 && editor.contains(sel.anchorNode)) {
+                target = sel.anchorNode;
+                while (target && target.parentNode !== editor) target = target.parentNode;
+            }
+            if (target) {
+                editor.insertBefore(el, target.nextSibling);
+            } else {
+                editor.appendChild(el);
+            }
+            var after = el.nextSibling;
+            if (!after || (after.nodeType === 1 && after.classList && after.classList.contains('ed-block'))) {
+                var div = document.createElement('div');
+                div.innerHTML = '<br>';
+                editor.insertBefore(div, el.nextSibling);
+            }
+        }
+
+        // ==================== TABLE HELPERS ====================
+        function addTableRow(table) {
+            var tbody = table.querySelector('tbody') || table;
+            var cols = table.querySelector('tr').children.length;
+            var hasRH = table.dataset.rowHeader;
+            var tr = document.createElement('tr');
+            for (var i = 0; i < cols; i++) {
+                var cell = (i === 0 && hasRH) ? document.createElement('th') : document.createElement('td');
+                cell.contentEditable = 'true';
+                cell.innerHTML = '<br>';
+                tr.appendChild(cell);
+            }
+            tbody.appendChild(tr);
+            setCursorStart(tr.firstChild);
+        }
+
+        function addTableCol(table) {
+            table.querySelectorAll('tr').forEach(function(tr) {
+                var isHead = tr.parentNode.tagName === 'THEAD';
+                var cell = isHead ? document.createElement('th') : document.createElement('td');
+                cell.contentEditable = 'true';
+                cell.innerHTML = '<br>';
+                tr.appendChild(cell);
+            });
+        }
+
+        function delTableRow(table) {
+            var tbody = table.querySelector('tbody') || table;
+            if (tbody.rows.length > 1) tbody.deleteRow(tbody.rows.length - 1);
+        }
+
+        function delTableCol(table) {
+            var rows = table.querySelectorAll('tr');
+            if (rows[0].cells.length > 1) {
+                rows.forEach(function(tr) { tr.deleteCell(tr.cells.length - 1); });
+            }
+        }
+
+        function nextCell(td) {
+            if (td.nextElementSibling) return td.nextElementSibling;
+            var tr = td.parentNode;
+            if (tr.nextElementSibling) return tr.nextElementSibling.firstElementChild;
+            if (tr.parentNode.tagName === 'THEAD') {
+                var tbody = tr.parentNode.nextElementSibling;
+                if (tbody && tbody.firstElementChild) return tbody.firstElementChild.firstElementChild;
+            }
+            return null;
+        }
+
+        function prevCell(td) {
+            if (td.previousElementSibling) return td.previousElementSibling;
+            var tr = td.parentNode;
+            if (tr.previousElementSibling) return tr.previousElementSibling.lastElementChild;
+            if (tr.parentNode.tagName === 'TBODY') {
+                var thead = tr.parentNode.previousElementSibling;
+                if (thead && thead.lastElementChild) return thead.lastElementChild.lastElementChild;
+            }
+            return null;
+        }
+
+        // ==================== INLINE WRAP ====================
+        function wrapSel(tagName) {
+            var sel = window.getSelection();
+            if (!sel.rangeCount) { editor.focus(); return; }
+            if (sel.isCollapsed) { editor.focus(); return; }
+            var range = sel.getRangeAt(0);
+            var parent = range.commonAncestorContainer;
+            if (parent.nodeType === 3) parent = parent.parentNode;
+            if (parent.tagName === tagName.toUpperCase()) {
+                var txt = document.createTextNode(parent.textContent);
+                parent.parentNode.replaceChild(txt, parent);
+                return;
+            }
+            try {
+                var el = document.createElement(tagName);
+                range.surroundContents(el);
+            } catch(ex) {
+                var content = range.extractContents();
+                var el = document.createElement(tagName);
+                el.appendChild(content);
+                range.insertNode(el);
+            }
+            sel.removeAllRanges();
+            editor.focus();
+        }
+
+        // ==================== DOM HELPERS ====================
+        function closest(node, tag) {
+            while (node && node !== editor) {
+                if (node.nodeType === 1 && node.tagName === tag) return node;
+                node = node.parentNode;
+            }
+            return null;
+        }
+
+        function setCursorStart(el) {
+            var r = document.createRange();
+            r.setStart(el, 0);
+            r.collapse(true);
+            var s = window.getSelection();
+            s.removeAllRanges();
+            s.addRange(r);
+        }
+
+        function selectAllIn(el) {
+            var r = document.createRange();
+            r.selectNodeContents(el);
+            var s = window.getSelection();
+            s.removeAllRanges();
+            s.addRange(r);
+        }
+
+        function ensureTrailingBr() {
+            var last = editor.lastChild;
+            if (!last || (last.nodeType === 1 && last.classList && last.classList.contains('ed-block')) || (last.nodeType === 1 && last.tagName === 'HR') || (last.nodeType === 1 && last.tagName === 'UL')) {
+                var div = document.createElement('div');
+                div.innerHTML = '<br>';
+                editor.appendChild(div);
+            }
+        }
+
+        function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+        // ==================== MARKUP → VISUAL HTML ====================
+        function markupToVisual(text) {
+            var html = '';
+            var parts = text.split('```');
+            for (var i = 0; i < parts.length; i++) {
+                if (i % 2 === 1) {
+                    var code = parts[i].replace(/^\n/, '').replace(/\n$/, '');
+                    html += '<div class="ed-block" contenteditable="false">'
+                        + '<div class="ed-block-controls"><span class="ed-block-label">Code</span>'
+                        + '<button type="button" class="ed-ctrl ed-ctrl-del" data-act="del-block">✕</button></div>'
+                        + '<pre class="ed-code" contenteditable="true">' + esc(code) + '</pre></div>';
+                } else {
+                    html += parseContent(parts[i]);
+                }
+            }
+            return html || '<div><br></div>';
+        }
+
+        function parseContent(text) {
+            var lines = text.split('\n');
+            var html = '';
+            var i = 0;
+            while (i < lines.length) {
+                var line = lines[i];
+                var trimmed = line.trim();
+
+                // Table block
+                if (trimmed.match(/^\|.+\|$/)) {
+                    var tLines = [];
+                    while (i < lines.length && lines[i].trim().match(/^\|.+\|$/)) {
+                        tLines.push(lines[i].trim());
+                        i++;
+                    }
+                    html += buildVisualTable(tLines);
+                    continue;
+                }
+
+                // List block
+                if (trimmed.match(/^[•\-] /)) {
+                    var items = [];
+                    while (i < lines.length && lines[i].trim().match(/^[•\-] /)) {
+                        items.push(lines[i].trim().replace(/^[•\-] /, ''));
+                        i++;
+                    }
+                    html += '<ul class="ed-list">';
+                    items.forEach(function(item) { html += '<li>' + inlineToHtml(item) + '</li>'; });
+                    html += '</ul>';
+                    continue;
+                }
+
+                // Image
+                var imgMatch = trimmed.match(/^!\[(.*?)\]\((.+?)\)$/);
+                if (imgMatch) {
+                    html += '<div class="ed-block" contenteditable="false">'
+                        + '<div class="ed-block-controls"><button type="button" class="ed-ctrl ed-ctrl-del" data-act="del-block">✕</button></div>'
+                        + '<img class="ed-img" src="' + esc(imgMatch[2]) + '" alt="' + esc(imgMatch[1]) + '"></div>';
+                    i++;
+                    continue;
+                }
+
+                // Divider
+                if (trimmed === '---' || trimmed === '***' || trimmed === '___') {
+                    html += '<hr class="ed-divider">';
+                    i++;
+                    continue;
+                }
+
+                // Regular text
+                if (trimmed) {
+                    html += '<div>' + inlineToHtml(trimmed) + '</div>';
+                } else {
+                    html += '<div><br></div>';
+                }
+                i++;
+            }
+            return html;
+        }
+
+        function inlineToHtml(text) {
+            text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            text = text.replace(/==(.+?)==/g, '<mark>$1</mark>');
+            text = text.replace(/`(.+?)`/g, '<code>$1</code>');
+            return text;
+        }
+
+        function buildVisualTable(lines) {
+            var sepIdx = -1;
+            for (var i = 0; i < lines.length; i++) {
+                if (isTableSep(lines[i])) { sepIdx = i; break; }
+            }
+            var hasHead = sepIdx > 0;
+            var firstCellEmpty = false;
+            var dataRowHeader = '';
+
+            var h = '<div class="ed-block" contenteditable="false">'
+                + '<div class="ed-block-controls">'
+                + '<button type="button" class="ed-ctrl" data-act="add-row">+ ↓</button>'
+                + '<button type="button" class="ed-ctrl" data-act="add-col">+ →</button>'
+                + '<button type="button" class="ed-ctrl" data-act="del-row">− ↓</button>'
+                + '<button type="button" class="ed-ctrl" data-act="del-col">− →</button>'
+                + '<button type="button" class="ed-ctrl ed-ctrl-del" data-act="del-block">✕</button>'
+                + '</div>';
+
+            if (hasHead) {
+                var headCells = parseCells(lines[0]);
+                if (headCells.length > 0 && headCells[0].trim() === '') firstCellEmpty = true;
+            }
+            if (firstCellEmpty) dataRowHeader = ' data-row-header="1"';
+            h += '<table class="ed-table"' + dataRowHeader + '>';
+
+            if (hasHead) {
+                h += '<thead><tr>';
+                parseCells(lines[0]).forEach(function(c) {
+                    h += '<th contenteditable="true">' + inlineToHtml(c.trim()) + '</th>';
+                });
+                h += '</tr></thead>';
+            }
+
+            h += '<tbody>';
+            var start = hasHead ? sepIdx + 1 : 0;
+            for (var i = start; i < lines.length; i++) {
+                if (isTableSep(lines[i])) continue;
+                var cells = parseCells(lines[i]);
+                h += '<tr>';
+                cells.forEach(function(c, j) {
+                    var tag = (j === 0 && firstCellEmpty) ? 'th' : 'td';
+                    h += '<' + tag + ' contenteditable="true">' + inlineToHtml(c.trim()) + '</' + tag + '>';
+                });
+                h += '</tr>';
+            }
+            h += '</tbody></table></div>';
+            return h;
+        }
+
+        function parseCells(line) {
+            line = line.replace(/^\|/, '').replace(/\|$/, '');
+            return line.split('|');
+        }
+
+        function isTableSep(line) {
+            var inner = line.replace(/^\|/, '').replace(/\|$/, '');
+            var cells = inner.split('|');
+            for (var i = 0; i < cells.length; i++) {
+                if (cells[i].trim().replace(/[-:]/g, '') !== '') return false;
+            }
+            return true;
+        }
+
+        // ==================== VISUAL HTML → MARKUP ====================
+        function visualToMarkup(element) {
+            var result = '';
+            for (var i = 0; i < element.childNodes.length; i++) {
+                result += serializeNode(element.childNodes[i]);
+            }
+            return result.replace(/\n{3,}/g, '\n\n').trim();
+        }
+
+        function serializeNode(node) {
+            if (node.nodeType === 3) return node.textContent;
+            if (node.nodeType !== 1) return '';
+            var tag = node.tagName;
+
+            // Block with table
+            if (node.classList && node.classList.contains('ed-block')) {
+                var tbl = node.querySelector('table');
+                if (tbl) return '\n' + serializeTable(tbl) + '\n';
+                var pre = node.querySelector('pre');
+                if (pre) return '\n```\n' + pre.textContent + '\n```\n';
+                var img = node.querySelector('img');
+                if (img) return '\n![' + (img.alt || 'Bild') + '](' + img.src + ')\n';
+                return '';
+            }
+
+            // List
+            if (tag === 'UL' || tag === 'OL') {
+                var s = '\n';
+                node.querySelectorAll('li').forEach(function(li) {
+                    s += '• ' + serializeInline(li) + '\n';
+                });
+                return s;
+            }
+
+            // HR
+            if (tag === 'HR') return '\n---\n';
+
+            // DIV / P (text line)
+            if (tag === 'DIV' || tag === 'P') {
+                if (node.classList && node.classList.contains('ed-block')) return ''; // handled above
+                var txt = serializeInline(node);
+                if (!txt && node.querySelector('br')) return '\n';
+                return txt + '\n';
+            }
+
+            // BR
+            if (tag === 'BR') return '\n';
+
+            // Inline at top level
+            return serializeInline(node);
+        }
+
+        function serializeInline(el) {
+            var result = '';
+            for (var i = 0; i < el.childNodes.length; i++) {
+                var n = el.childNodes[i];
+                if (n.nodeType === 3) { result += n.textContent; continue; }
+                if (n.nodeType !== 1) continue;
+                var t = n.tagName;
+                var inner = serializeInline(n);
+                switch(t) {
+                    case 'STRONG': case 'B': result += '**' + inner + '**'; break;
+                    case 'MARK': result += '==' + inner + '=='; break;
+                    case 'CODE': result += '`' + inner + '`'; break;
+                    case 'BR': break;
+                    default: result += inner;
+                }
+            }
+            return result;
+        }
+
+        function serializeTable(table) {
+            var hasRH = table.dataset.rowHeader;
+            var thead = table.querySelector('thead');
+            var lines = [];
+
+            if (thead) {
+                var ths = thead.querySelectorAll('th');
+                var headParts = [];
+                ths.forEach(function(th) { headParts.push(serializeInline(th)); });
+                if (hasRH && headParts.length > 0) headParts[0] = '';
+                lines.push('| ' + headParts.join(' | ') + ' |');
+                lines.push('|' + headParts.map(function(){ return '---'; }).join('|') + '|');
+            }
+
+            var rows = table.querySelectorAll('tbody tr');
+            rows.forEach(function(tr) {
+                var parts = [];
+                tr.querySelectorAll('td, th').forEach(function(c) { parts.push(serializeInline(c)); });
+                lines.push('| ' + parts.join(' | ') + ' |');
+            });
+
+            return lines.join('\n');
+        }
+
+    })();
+    </script>
+</body>
+</html>
+{{end}}

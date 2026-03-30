@@ -1,0 +1,375 @@
+{
+  "version": "1.0",
+  "decks": [
+    {
+      "id": "preset-go-basics",
+      "user_id": "",
+      "name": "Go Basics 🐹",
+      "color": "#00ADD8",
+      "created_at": "2026-03-30T00:00:00Z",
+      "updated_at": "2026-03-30T00:00:00Z"
+    }
+  ],
+  "cards": [
+    {
+      "id": "go-01", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Wie sieht das minimale \"Hello World\"-Programm in Go aus?",
+      "back": "```\npackage main\n\nimport \"fmt\"\n\nfunc main() {\n    fmt.Println(\"Hello, World!\")\n}\n```\n\n• Jede Go-Datei beginnt mit `package`\n• `main` ist der Einstiegspunkt\n• `import` lädt Packages",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-02", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Wie deklariert man Variablen in Go? Nenne alle Varianten.",
+      "back": "| Syntax | Beschreibung |\n|---|---|\n| `var x int` | Deklaration mit Typ |\n| `var x int = 5` | Mit Typ + Wert |\n| `var x = 5` | Typ wird abgeleitet |\n| `x := 5` | Kurzform (nur in Funktionen) |\n\n```\nvar name string = \"Go\"\nalter := 15\n```",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-03", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was ist der Unterschied zwischen `var` und `:=`?",
+      "back": "| | `var` | `:=` |\n|---|---|---|\n| Wo? | Überall | Nur in Funktionen |\n| Typ | Optional | Wird abgeleitet |\n| Nullwert | Ja, wenn kein Wert | Braucht immer einen Wert |\n\n```\nvar global string     // Package-Ebene OK\n\nfunc main() {\n    lokal := \"nur hier\"  // Kurzform\n}\n```",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-04", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Wie deklariert man Konstanten in Go?",
+      "back": "Mit dem Schlüsselwort `const`:\n\n```\nconst pi = 3.14159\nconst (\n    statusOK    = 200\n    statusError = 500\n)\n```\n\n• Konstanten werden zur Kompilierzeit ausgewertet\n• Kein `:=` für Konstanten möglich\n• Können nicht verändert werden",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-05", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was ist `iota` in Go?",
+      "back": "`iota` ist ein Zähler für Konstanten-Blöcke, beginnt bei 0:\n\n```\nconst (\n    Montag = iota  // 0\n    Dienstag       // 1\n    Mittwoch       // 2\n    Donnerstag     // 3\n)\n```\n\nSehr nützlich für Enumerationen (Go hat kein `enum`).",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-06", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Welche grundlegenden Datentypen gibt es in Go?",
+      "back": "| Kategorie | Typen |\n|---|---|\n| Ganzzahlen | `int`, `int8`, `int16`, `int32`, `int64` |\n| Unsigned | `uint`, `uint8`, `uint16`, `uint32`, `uint64` |\n| Gleitkomma | `float32`, `float64` |\n| Komplex | `complex64`, `complex128` |\n| Text | `string` |\n| Boolean | `bool` |\n| Aliase | `byte` = `uint8`, `rune` = `int32` |",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-07", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was sind die Nullwerte (Zero Values) der Grundtypen in Go?",
+      "back": "| Typ | Nullwert |\n|---|---|\n| `int`, `float64` | `0` |\n| `string` | `\"\"` (leerer String) |\n| `bool` | `false` |\n| Pointer | `nil` |\n| Slice, Map | `nil` |\n| Struct | Alle Felder auf Nullwert |\n\nVariablen ohne Zuweisung erhalten automatisch den Nullwert.",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-08", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was ist ein `rune` in Go?",
+      "back": "Ein `rune` ist ein Alias für `int32` und repräsentiert ein Unicode-Zeichen.\n\n```\nvar r rune = 'A'         // 65\nvar emoji rune = '🐹'    // 128057\n\ns := \"Hä\"\nfmt.Println(len(s))          // 3 (Bytes)\nfmt.Println(len([]rune(s)))  // 2 (Zeichen)\n```\n\nWichtig bei Nicht-ASCII-Zeichen (ä, ü, Emojis)!",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-09", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Wie funktionieren `fmt.Println`, `fmt.Printf` und `fmt.Sprintf`?",
+      "back": "| Funktion | Beschreibung |\n|---|---|\n| `Println` | Gibt Werte mit Newline aus |\n| `Printf` | Formatierte Ausgabe |\n| `Sprintf` | Gibt formatierten String zurück |\n\n```\nfmt.Println(\"Hallo\", 42)\nfmt.Printf(\"Name: %s, Alter: %d\\n\", n, a)\ns := fmt.Sprintf(\"%d€\", preis)\n```\n\nWichtige Verben: `%s` String, `%d` int, `%f` float, `%v` beliebig, `%T` Typ",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-10", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Wie funktioniert `if` in Go? Was ist besonders?",
+      "back": "Go erlaubt ein optionales Init-Statement vor der Bedingung:\n\n```\n// Normal\nif x > 10 {\n    fmt.Println(\"groß\")\n} else {\n    fmt.Println(\"klein\")\n}\n\n// Mit Init-Statement\nif err := machWas(); err != nil {\n    fmt.Println(err)\n}\n```\n\n• Keine Klammern um die Bedingung\n• Geschweifte Klammern sind Pflicht",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-11", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Welche Schleifen gibt es in Go?",
+      "back": "Go hat nur `for` – keine `while`- oder `do-while`-Schleife!\n\n```\n// Klassisch\nfor i := 0; i < 5; i++ { }\n\n// Wie while\nfor bedingung { }\n\n// Endlosschleife\nfor { }\n\n// Range über Slice/Map\nfor i, v := range slice { }\n```",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-12", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Wie funktioniert `switch` in Go? Was ist anders als in C/Java?",
+      "back": "```\nswitch tag {\ncase \"Mo\":\n    fmt.Println(\"Montag\")\ncase \"Di\", \"Mi\":\n    fmt.Println(\"Dienstag oder Mittwoch\")\ndefault:\n    fmt.Println(\"Anderer Tag\")\n}\n```\n\n• Kein `break` nötig (automatisch)\n• `fallthrough` erzwingt Durchfallen zum nächsten Case\n• Switch ohne Ausdruck (wie if/else-Kette):\n\n```\nswitch {\ncase x > 0: fmt.Println(\"positiv\")\ncase x < 0: fmt.Println(\"negativ\")\n}\n```",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-13", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Wie definiert man eine Funktion in Go?",
+      "back": "```\nfunc name(param1 typ1, param2 typ2) rückgabetyp {\n    return wert\n}\n```\n\nBeispiel:\n\n```\nfunc addiere(a int, b int) int {\n    return a + b\n}\n```\n\nGleiche Typen können gruppiert werden: `a, b int`",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-14", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was sind Multiple Return Values in Go?",
+      "back": "Go-Funktionen können mehrere Werte zurückgeben:\n\n```\nfunc teile(a, b float64) (float64, error) {\n    if b == 0 {\n        return 0, errors.New(\"Division durch 0\")\n    }\n    return a / b, nil\n}\n\nergebnis, err := teile(10, 3)\n```\n\nSehr häufig: Ergebnis + Error als Paar.",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-15", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was sind Named Return Values?",
+      "back": "Rückgabewerte können benannt werden – ein \"nacktes\" `return` gibt sie zurück:\n\n```\nfunc teile(a, b float64) (ergebnis float64, err error) {\n    if b == 0 {\n        err = errors.New(\"Division durch 0\")\n        return\n    }\n    ergebnis = a / b\n    return\n}\n```\n\nSollte nur in kurzen Funktionen verwendet werden (Lesbarkeit).",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-16", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was sind Variadic Functions in Go?",
+      "back": "Funktionen mit beliebig vielen Argumenten eines Typs:\n\n```\nfunc summe(zahlen ...int) int {\n    total := 0\n    for _, z := range zahlen {\n        total += z\n    }\n    return total\n}\n\nsumme(1, 2, 3)        // 6\nsumme(1, 2, 3, 4, 5)  // 15\n```\n\nInnerhalb der Funktion ist `zahlen` ein `[]int` (Slice).",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-17", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was sind anonyme Funktionen und Closures in Go?",
+      "back": "Funktionen können als Werte gespeichert und inline definiert werden:\n\n```\n// Anonyme Funktion\ngreet := func(name string) {\n    fmt.Println(\"Hallo\", name)\n}\ngreet(\"Max\")\n\n// Closure – greift auf äußere Variable zu\ncounter := 0\nincrement := func() int {\n    counter++\n    return counter\n}\nfmt.Println(increment()) // 1\nfmt.Println(increment()) // 2\n```",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-18", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was ist der Unterschied zwischen einem Array und einem Slice?",
+      "back": "| | Array | Slice |\n|---|---|---|\n| Größe | Fest (zur Kompilierzeit) | Dynamisch |\n| Deklaration | `[3]int{1,2,3}` | `[]int{1,2,3}` |\n| Zuweisung | Kopiert Daten | Kopiert Referenz |\n| Nutzung | Selten | Sehr häufig |\n\n```\narr := [3]int{1, 2, 3}    // Array\nslc := []int{1, 2, 3}     // Slice\nslc = append(slc, 4)      // Geht!\n```",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-19", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Wie erstellt man einen Slice und fügt Elemente hinzu?",
+      "back": "```\n// Literal\ns := []int{1, 2, 3}\n\n// Mit make (Länge, Kapazität)\ns := make([]int, 0, 10)\n\n// Elemente hinzufügen\ns = append(s, 4)\ns = append(s, 5, 6, 7)\n\n// Slice aus Slice\nteil := s[1:3]  // Index 1 bis 2\n```\n\n`append` gibt einen neuen Slice zurück – Rückgabe immer zuweisen!",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-20", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was sind `len()` und `cap()` bei Slices?",
+      "back": "• `len(s)` – Aktuelle Anzahl der Elemente\n• `cap(s)` – Maximale Kapazität ohne Neuallokation\n\n```\ns := make([]int, 3, 10)\nfmt.Println(len(s))  // 3\nfmt.Println(cap(s))  // 10\n\ns = append(s, 4)\nfmt.Println(len(s))  // 4\nfmt.Println(cap(s))  // 10 (noch Platz)\n```\n\nWenn `len` == `cap`, verdoppelt `append` die Kapazität.",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-21", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Wie erstellt und benutzt man eine Map in Go?",
+      "back": "```\n// Literal\nalter := map[string]int{\n    \"Alice\": 25,\n    \"Bob\":   30,\n}\n\n// Mit make\nm := make(map[string]int)\n\n// CRUD\nm[\"key\"] = 42              // Setzen\nwert := m[\"key\"]            // Lesen\ndelete(m, \"key\")            // Löschen\nwert, ok := m[\"key\"]        // Prüfen ob existiert\n```\n\nDas Komma-ok-Idiom: `ok` ist `true` wenn der Key existiert.",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-22", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Wie iteriert man mit `range` über Slices und Maps?",
+      "back": "```\n// Slice – Index + Wert\nfor i, v := range []string{\"a\", \"b\", \"c\"} {\n    fmt.Println(i, v)\n}\n\n// Map – Key + Value\nfor k, v := range meineMap {\n    fmt.Println(k, v)\n}\n\n// Nur Index / nur Key\nfor i := range slice { }\n\n// Wert ignorieren\nfor _, v := range slice { }\n```",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-23", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was ist ein Struct und wie erstellt man eins?",
+      "back": "Ein Struct gruppiert zusammengehörige Felder:\n\n```\ntype Person struct {\n    Name  string\n    Alter int\n    Email string\n}\n\n// Erstellen\np1 := Person{Name: \"Max\", Alter: 25}\np2 := Person{\"Max\", 25, \"max@mail.de\"}\n\n// Zugriff\nfmt.Println(p1.Name)\np1.Alter = 26\n```",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-24", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was sind Methoden in Go? Wie unterscheiden sie sich von Funktionen?",
+      "back": "Eine Methode ist eine Funktion mit einem Receiver:\n\n```\ntype Kreis struct{ Radius float64 }\n\n// Methode auf Kreis\nfunc (k Kreis) Flaeche() float64 {\n    return math.Pi * k.Radius * k.Radius\n}\n\nk := Kreis{Radius: 5}\nfmt.Println(k.Flaeche())\n```\n\n| | Funktion | Methode |\n|---|---|---|\n| Aufruf | `flaeche(k)` | `k.Flaeche()` |\n| Receiver | Keiner | An Typ gebunden |",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-25", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Wann benutzt man einen Value Receiver vs. Pointer Receiver?",
+      "back": "| | Value Receiver | Pointer Receiver |\n|---|---|---|\n| Syntax | `func (k Kreis)` | `func (k *Kreis)` |\n| Kopie? | Ja, arbeitet auf Kopie | Nein, ändert Original |\n| Wann? | Nur lesen | Wenn Felder geändert werden |\n\n```\n// Value: liest nur\nfunc (k Kreis) Flaeche() float64 { ... }\n\n// Pointer: ändert Struct\nfunc (k *Kreis) Skaliere(faktor float64) {\n    k.Radius *= faktor\n}\n```",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-26", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was ist ein Pointer und wie benutzt man ihn?",
+      "back": "Ein Pointer speichert die Speicheradresse einer Variable.\n\n```\nx := 42\np := &x        // p zeigt auf x\nfmt.Println(*p)  // 42 (Dereferenzierung)\n*p = 100\nfmt.Println(x)   // 100 (geändert!)\n```\n\n• `&x` – Adresse von x\n• `*p` – Wert an der Adresse (Dereferenzierung)\n• Go hat keine Pointer-Arithmetik (anders als C)",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-27", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was ist ein Interface in Go?",
+      "back": "Ein Interface definiert eine Menge von Methoden. Jeder Typ, der diese hat, erfüllt es automatisch:\n\n```\ntype Tier interface {\n    Laut() string\n}\n\ntype Hund struct{}\nfunc (h Hund) Laut() string { return \"Wuff\" }\n\ntype Katze struct{}\nfunc (k Katze) Laut() string { return \"Miau\" }\n\nvar t Tier = Hund{}\nfmt.Println(t.Laut()) // Wuff\n```\n\nKein `implements`-Keyword – Interfaces werden implizit erfüllt.",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-28", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was ist das leere Interface `interface{}` bzw. `any`?",
+      "back": "Das leere Interface hat keine Methoden – jeder Typ erfüllt es:\n\n```\nvar x any = 42\nx = \"Hallo\"\nx = true\n```\n\n`any` ist ein Alias für `interface{}` (seit Go 1.18).\n\nNützlich für generische Container, aber man verliert Typsicherheit. Zum Zurückkonvertieren:\n\n```\nwert, ok := x.(string)  // Type Assertion\n```",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-29", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was ist eine Type Assertion und ein Type Switch?",
+      "back": "Zum Prüfen/Extrahieren des konkreten Typs aus einem Interface:\n\n```\n// Type Assertion\nvar i any = \"hallo\"\ns, ok := i.(string)  // ok = true\n\n// Type Switch\nswitch v := i.(type) {\ncase string:\n    fmt.Println(\"String:\", v)\ncase int:\n    fmt.Println(\"Int:\", v)\ndefault:\n    fmt.Println(\"Unbekannt\")\n}\n```",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-30", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Wie funktioniert Error Handling in Go?",
+      "back": "Go benutzt kein try/catch. Fehler sind Werte vom Typ `error`:\n\n```\nresult, err := strconv.Atoi(\"abc\")\nif err != nil {\n    fmt.Println(\"Fehler:\", err)\n    return\n}\nfmt.Println(result)\n```\n\nKonvention:\n• Fehler immer als letzter Rückgabewert\n• `nil` bedeutet kein Fehler\n• Fehler sofort prüfen, nicht ignorieren!",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-31", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Wie erstellt man eigene Fehlertypen?",
+      "back": "Mit `errors.New()` oder `fmt.Errorf()`:\n\n```\n// Einfacher Error\nerr := errors.New(\"etwas ging schief\")\n\n// Mit Formatierung\nerr := fmt.Errorf(\"user %s nicht gefunden\", name)\n\n// Error wrapping (Go 1.13+)\nerr := fmt.Errorf(\"DB-Fehler: %w\", originalErr)\n```\n\nZum Prüfen gewrappter Errors:\n\n```\nif errors.Is(err, os.ErrNotExist) { }\n```",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-32", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was bedeutet der Unterstrich `_` in Go?",
+      "back": "Der Blank Identifier `_` verwirft einen Wert:\n\n```\n// Rückgabewert ignorieren\nwert, _ := strconv.Atoi(\"42\")\n\n// Index ignorieren bei range\nfor _, v := range slice { }\n\n// Import nur für Seiteneffekte\nimport _ \"image/png\"\n```\n\nGo erzwingt, dass alle Variablen benutzt werden – `_` ist der offizielle Weg zum Ignorieren.",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-33", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was macht `defer` und wann wird es benutzt?",
+      "back": "`defer` verschiebt einen Funktionsaufruf ans Ende der umgebenden Funktion:\n\n```\nfunc lesen() {\n    f, _ := os.Open(\"datei.txt\")\n    defer f.Close()  // wird am Ende ausgeführt\n\n    // ... Datei lesen ...\n}\n```\n\n• Argumente werden sofort ausgewertet\n• LIFO-Reihenfolge bei mehreren defers\n• Typische Anwendung: Ressourcen-Cleanup (Close, Unlock, etc.)",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-34", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was sind `panic` und `recover` in Go?",
+      "back": "`panic` bricht das Programm ab, `recover` fängt es auf:\n\n```\nfunc sichereFunktion() {\n    defer func() {\n        if r := recover(); r != nil {\n            fmt.Println(\"Aufgefangen:\", r)\n        }\n    }()\n\n    panic(\"Etwas Schlimmes!\")\n}\n```\n\n• `panic` nur für echte Programmfehler, nicht für normale Fehler\n• `recover` funktioniert nur in `defer`-Funktionen\n• Normales Error Handling bevorzugen!",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-35", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Wie werden Namen in Go exportiert?",
+      "back": "Durch Groß- und Kleinschreibung des Anfangsbuchstabens!\n\n| Name | Sichtbarkeit |\n|---|---|\n| `Person` | Exportiert (öffentlich) |\n| `person` | Nicht exportiert (privat) |\n| `GetName()` | Exportiert |\n| `getName()` | Nicht exportiert |\n| `ID` | Exportiertes Struct-Feld |\n| `id` | Privates Struct-Feld |\n\nGilt für Typen, Funktionen, Variablen, Konstanten und Struct-Felder.",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-36", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was ist ein Package und wie importiert man es?",
+      "back": "• Jede Go-Datei gehört zu einem Package: `package meins`\n• Das `main`-Package ist der Einstiegspunkt\n\n```\nimport \"fmt\"               // Standard\nimport \"os\"                // Standard\n\nimport (\n    \"fmt\"\n    \"net/http\"\n    \"github.com/user/pkg\"  // Extern\n)\n```\n\nImportierte Packages müssen verwendet werden – sonst Compilerfehler!",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-37", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was macht `go mod init` und welche Dateien werden erstellt?",
+      "back": "`go mod init` initialisiert ein Go-Modul:\n\n```\ngo mod init github.com/user/projekt\n```\n\nErstellt `go.mod` mit:\n\n```\nmodule github.com/user/projekt\ngo 1.22\n```\n\nWichtige Befehle:\n\n| Befehl | Beschreibung |\n|---|---|\n| `go mod init` | Modul erstellen |\n| `go mod tidy` | Abhängigkeiten aufräumen |\n| `go get pkg` | Dependency hinzufügen |\n| `go mod download` | Dependencies herunterladen |",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-38", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was ist eine Goroutine und wie startet man eine?",
+      "back": "Eine Goroutine ist ein leichtgewichtiger, nebenläufiger Thread:\n\n```\nfunc sagHallo(name string) {\n    fmt.Println(\"Hallo\", name)\n}\n\nfunc main() {\n    go sagHallo(\"Alice\")\n    go sagHallo(\"Bob\")\n    time.Sleep(time.Second)\n}\n```\n\n• `go funktion()` startet eine Goroutine\n• Kosten: nur ~2 KB Stack (vs. ~1 MB pro OS-Thread)\n• Tausende gleichzeitig möglich!",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-39", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was ist ein Channel und wie benutzt man ihn?",
+      "back": "Channels ermöglichen sichere Kommunikation zwischen Goroutines:\n\n```\nch := make(chan string)\n\ngo func() {\n    ch <- \"Nachricht\"  // Senden\n}()\n\nmsg := <-ch  // Empfangen (blockiert!)\nfmt.Println(msg)\n```\n\n• Senden: `ch <- wert`\n• Empfangen: `wert := <-ch`\n• Blockiert bis beide Seiten bereit sind\n• Schließen: `close(ch)`",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-40", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was ist ein Buffered Channel?",
+      "back": "Ein Channel mit interner Warteschlange – Senden blockiert erst wenn voll:\n\n```\nch := make(chan int, 3)  // Buffer-Größe 3\n\nch <- 1  // blockiert nicht\nch <- 2  // blockiert nicht\nch <- 3  // blockiert nicht\nch <- 4  // BLOCKIERT – Buffer voll!\n```\n\n| | Unbuffered | Buffered |\n|---|---|---|\n| Erstellen | `make(chan T)` | `make(chan T, n)` |\n| Senden | Blockiert sofort | Blockiert wenn voll |\n| Synchron? | Ja | Teilweise |",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-41", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was macht `select` in Go?",
+      "back": "`select` wartet auf mehrere Channel-Operationen gleichzeitig:\n\n```\nselect {\ncase msg := <-ch1:\n    fmt.Println(\"Von ch1:\", msg)\ncase msg := <-ch2:\n    fmt.Println(\"Von ch2:\", msg)\ncase <-time.After(3 * time.Second):\n    fmt.Println(\"Timeout!\")\n}\n```\n\n• Führt den ersten bereiten Case aus\n• Bei mehreren bereiten: zufällige Auswahl\n• Häufig mit Timeouts und `done`-Channels",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-42", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was ist eine `sync.WaitGroup`?",
+      "back": "Warten bis eine Gruppe von Goroutines fertig ist:\n\n```\nvar wg sync.WaitGroup\n\nfor i := 0; i < 5; i++ {\n    wg.Add(1)\n    go func(id int) {\n        defer wg.Done()\n        fmt.Println(\"Worker\", id)\n    }(i)\n}\n\nwg.Wait()  // Blockiert bis alle Done()\n```\n\n• `Add(n)` – Zähler erhöhen\n• `Done()` – Zähler um 1 verringern\n• `Wait()` – Blockieren bis Zähler = 0",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-43", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was ist der Unterschied zwischen `make()` und `new()`?",
+      "back": "| | `make()` | `new()` |\n|---|---|---|\n| Für | Slice, Map, Channel | Jeden Typ |\n| Gibt zurück | Initialisierten Wert | Pointer (`*T`) |\n| Nutzbar? | Sofort | Felder auf Nullwert |\n\n```\ns := make([]int, 5)       // []int, len=5\nm := make(map[string]int) // Leere, nutzbare Map\n\np := new(int)   // *int, Wert = 0\n*p = 42\n```\n\n`make` initialisiert interne Datenstrukturen, `new` alloziert nur Speicher.",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-44", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Wie konvertiert man zwischen Typen in Go?",
+      "back": "Go erfordert explizite Typkonvertierung:\n\n```\nvar i int = 42\nvar f float64 = float64(i)\nvar u uint = uint(i)\n```\n\nFür Strings:\n\n| Konvertierung | Funktion |\n|---|---|\n| int → string | `strconv.Itoa(42)` |\n| string → int | `strconv.Atoi(\"42\")` |\n| int → string (Unicode) | `string(rune(65))` → \"A\" |\n| []byte → string | `string(bytes)` |\n\nImplizite Konvertierung gibt es nicht!",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-45", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Welche wichtigen `strings`-Funktionen gibt es?",
+      "back": "| Funktion | Beschreibung |\n|---|---|\n| `strings.Contains(s, \"go\")` | Enthält Substring? |\n| `strings.HasPrefix(s, \"Go\")` | Beginnt mit? |\n| `strings.HasSuffix(s, \".go\")` | Endet mit? |\n| `strings.ToUpper(s)` | Großbuchstaben |\n| `strings.ToLower(s)` | Kleinbuchstaben |\n| `strings.Split(s, \",\")` | Aufteilen |\n| `strings.Join(sl, \",\")` | Zusammenfügen |\n| `strings.TrimSpace(s)` | Whitespace entfernen |\n| `strings.ReplaceAll(s, \"a\", \"b\")` | Ersetzen |",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-46", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Wie funktionieren Struct-Einbettungen (Embedding)?",
+      "back": "Go hat keine Vererbung, aber Embedding – ein Struct kann ein anderes einbetten:\n\n```\ntype Tier struct {\n    Name string\n}\nfunc (t Tier) Beschreibung() string {\n    return t.Name\n}\n\ntype Hund struct {\n    Tier           // Eingebettet (kein Feldname)\n    Rasse string\n}\n\nh := Hund{Tier: Tier{Name: \"Rex\"}, Rasse: \"Schäferhund\"}\nfmt.Println(h.Name)           // Direkt!\nfmt.Println(h.Beschreibung()) // Methode geerbt\n```",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-47", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Wie schreibt man Tests in Go?",
+      "back": "Testdateien enden auf `_test.go`, Testfunktionen beginnen mit `Test`:\n\n```\n// math_test.go\npackage math\n\nimport \"testing\"\n\nfunc TestAddiere(t *testing.T) {\n    ergebnis := Addiere(2, 3)\n    if ergebnis != 5 {\n        t.Errorf(\"Addiere(2,3) = %d; erwartet 5\", ergebnis)\n    }\n}\n```\n\nAusführen:\n\n```\ngo test ./...\ngo test -v       // verbose\ngo test -cover   // mit Coverage\n```",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-48", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Wie liest und schreibt man Dateien in Go?",
+      "back": "```\n// Ganze Datei lesen\ndata, err := os.ReadFile(\"datei.txt\")\ninhalt := string(data)\n\n// Ganze Datei schreiben\nerr := os.WriteFile(\"datei.txt\",\n    []byte(\"Hallo Welt\"), 0644)\n\n// Zeilenweise lesen\nf, _ := os.Open(\"datei.txt\")\ndefer f.Close()\nscanner := bufio.NewScanner(f)\nfor scanner.Scan() {\n    fmt.Println(scanner.Text())\n}\n```",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-49", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Wie startet man einen HTTP-Server in Go?",
+      "back": "```\npackage main\n\nimport (\n    \"fmt\"\n    \"net/http\"\n)\n\nfunc handler(w http.ResponseWriter,\n    r *http.Request) {\n    fmt.Fprintf(w, \"Hallo %s!\", r.URL.Path[1:])\n}\n\nfunc main() {\n    http.HandleFunc(\"/\", handler)\n    http.ListenAndServe(\":8080\", nil)\n}\n```\n\n• `http.HandleFunc` registriert Handler\n• `http.ResponseWriter` schreibt die Antwort\n• `*http.Request` enthält die Anfrage-Daten",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-50", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Wie funktioniert JSON-Encoding und -Decoding in Go?",
+      "back": "Mit dem `encoding/json`-Package:\n\n```\ntype User struct {\n    Name  string `json:\"name\"`\n    Alter int    `json:\"alter\"`\n}\n\n// Struct → JSON\ndata, _ := json.Marshal(user)\n\n// JSON → Struct\nvar u User\njson.Unmarshal(data, &u)\n```\n\n• Struct-Tags steuern die JSON-Feldnamen\n• Nur exportierte Felder (Großbuchstabe) werden serialisiert\n• `json:\"-\"` überspringt ein Feld",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-51", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was sind Struct-Tags in Go und wofür werden sie benutzt?",
+      "back": "Metadaten an Struct-Feldern, die per Reflection gelesen werden:\n\n```\ntype User struct {\n    ID    int    `json:\"id\" db:\"user_id\"`\n    Name  string `json:\"name\" validate:\"required\"`\n    Pass  string `json:\"-\"`\n}\n```\n\nHäufige Tags:\n\n| Tag | Package | Bedeutung |\n|---|---|---|\n| `json:\"name\"` | encoding/json | JSON-Feldname |\n| `json:\"-\"` | encoding/json | Feld ignorieren |\n| `json:\"name,omitempty\"` | encoding/json | Nullwerte weglassen |\n| `db:\"column\"` | sqlx | Datenbank-Spalte |",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-52", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was ist die `init()`-Funktion in Go?",
+      "back": "`init()` wird automatisch vor `main()` ausgeführt:\n\n```\npackage main\n\nvar config string\n\nfunc init() {\n    config = \"geladen\"\n    fmt.Println(\"Init läuft\")\n}\n\nfunc main() {\n    fmt.Println(\"Main läuft\")\n}\n// Ausgabe: Init läuft, Main läuft\n```\n\n• Jede Datei kann eine `init()` haben\n• Keine Parameter, keine Rückgabewerte\n• Reihenfolge: Imports → init() → main()",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-53", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Welche Go-Kommandozeilentools sollte man kennen?",
+      "back": "| Befehl | Beschreibung |\n|---|---|\n| `go run main.go` | Kompilieren + ausführen |\n| `go build` | Binary erstellen |\n| `go test ./...` | Tests ausführen |\n| `go fmt ./...` | Code formatieren |\n| `go vet ./...` | Häufige Fehler finden |\n| `go mod init` | Modul initialisieren |\n| `go mod tidy` | Dependencies aufräumen |\n| `go get pkg@v1.0` | Dependency hinzufügen |\n| `go doc fmt.Println` | Dokumentation anzeigen |",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-54", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was ist `sync.Mutex` und wann braucht man es?",
+      "back": "Ein Mutex schützt geteilte Daten vor gleichzeitigem Zugriff:\n\n```\nvar mu sync.Mutex\nvar counter int\n\nfunc increment() {\n    mu.Lock()\n    defer mu.Unlock()\n    counter++\n}\n```\n\n| | `sync.Mutex` | `sync.RWMutex` |\n|---|---|---|\n| Lesen | Exklusiv | Parallel möglich |\n| Schreiben | Exklusiv | Exklusiv |\n| Methoden | `Lock`, `Unlock` | + `RLock`, `RUnlock` |",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-55", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was sind Go-Konventionen für guten Code-Stil?",
+      "back": "• `go fmt` formatiert automatisch – nie manuell formatieren\n• Variablen: `camelCase` (nicht `snake_case`)\n• Akronyme komplett groß: `userID`, `httpClient`, `URL`\n• Kurze Variablennamen in kleinem Scope: `i`, `s`, `err`\n• Einmethoden-Interfaces enden auf -er: `Reader`, `Writer`\n• Error-Strings kleingeschrieben, ohne Punkt\n• Getter heißen `Name()`, nicht `GetName()`\n• Setter heißen `SetName()`",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-56", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Wie implementiert man das `Stringer`-Interface?",
+      "back": "Das `fmt.Stringer`-Interface steuert, wie ein Typ gedruckt wird:\n\n```\ntype Farbe int\n\nconst (\n    Rot Farbe = iota\n    Gruen\n    Blau\n)\n\nfunc (f Farbe) String() string {\n    namen := [...]string{\"Rot\", \"Grün\", \"Blau\"}\n    return namen[f]\n}\n\nfmt.Println(Rot)   // \"Rot\" statt \"0\"\nfmt.Println(Blau)  // \"Blau\" statt \"2\"\n```",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-57", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was sind wichtige Interfaces aus der Standardbibliothek?",
+      "back": "| Interface | Package | Methode |\n|---|---|---|\n| `Stringer` | fmt | `String() string` |\n| `error` | builtin | `Error() string` |\n| `Reader` | io | `Read([]byte) (int, error)` |\n| `Writer` | io | `Write([]byte) (int, error)` |\n| `Closer` | io | `Close() error` |\n| `Handler` | net/http | `ServeHTTP(w, r)` |\n| `Sort` | sort | `Len()`, `Less()`, `Swap()` |\n\nDiese Interfaces tauchen überall auf!",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-58", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was sind Generics in Go und wie benutzt man sie?",
+      "back": "Seit Go 1.18 – Funktionen und Typen mit Typ-Parametern:\n\n```\nfunc Min[T int | float64 | string](a, b T) T {\n    if a < b {\n        return a\n    }\n    return b\n}\n\nMin(3, 7)           // 3\nMin(\"a\", \"z\")       // \"a\"\n```\n\nMit Constraints:\n\n```\nfunc Filter[T any](s []T, fn func(T) bool) []T {\n    var result []T\n    for _, v := range s {\n        if fn(v) { result = append(result, v) }\n    }\n    return result\n}\n```",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-59", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was ist `context.Context` und wofür wird es benutzt?",
+      "back": "Context überträgt Deadlines, Abbruch-Signale und Werte über API-Grenzen:\n\n```\nctx, cancel := context.WithTimeout(\n    context.Background(),\n    5*time.Second,\n)\ndefer cancel()\n\nreq, _ := http.NewRequestWithContext(\n    ctx, \"GET\", url, nil,\n)\n```\n\n• Immer erster Parameter: `func DoWork(ctx context.Context, ...)`\n• Abbruch prüfen: `ctx.Done()` Channel\n• Nie nil übergeben – `context.Background()` oder `context.TODO()`",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    },
+    {
+      "id": "go-60", "deck_id": "preset-go-basics", "user_id": "",
+      "front": "Was ist der Unterschied zwischen Concurrency und Parallelism in Go?",
+      "back": "| | Concurrency | Parallelism |\n|---|---|---|\n| Bedeutung | Mehrere Aufgaben strukturieren | Gleichzeitig ausführen |\n| Analogie | Ein Koch, mehrere Gerichte | Mehrere Köche |\n| Go-Konzept | Goroutines + Channels | `GOMAXPROCS` |\n\n• Concurrency = Programm-Struktur (Design)\n• Parallelism = Gleichzeitige Ausführung (Hardware)\n• Go macht Concurrency einfach – Parallelism kommt gratis mit mehreren CPUs\n\nRob Pike: \"Concurrency is not parallelism.\"",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-03-30T00:00:00Z", "created_at": "2026-03-30T00:00:00Z", "updated_at": "2026-03-30T00:00:00Z"
+    }
+  ]
+}
