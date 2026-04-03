@@ -8,7 +8,12 @@ import (
 )
 
 func main() {
-	store, err := NewStore("data")
+	dsn := os.Getenv("DATABASE_URL")
+	if dsn == "" {
+		dsn = "postgres://indexcards:indexcards@localhost:5432/indexcards?sslmode=disable"
+	}
+
+	store, err := NewStore(dsn)
 	if err != nil {
 		log.Fatalf("Failed to initialize store: %v", err)
 	}
