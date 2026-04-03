@@ -192,7 +192,20 @@ fmt.Println("Hallo")
                 var pre = closest(sel.anchorNode, 'PRE');
                 if (pre) return;
                 e.preventDefault();
-                document.execCommand('insertLineBreak');
+                // Neues leeres div direkt als Kind des Editors einfügen –
+                // so erbt die neue Zeile nie eine Inline-Formatierung.
+                var newDiv = document.createElement('div');
+                newDiv.innerHTML = '<br>';
+                var blockParent = sel.anchorNode;
+                while (blockParent && blockParent.parentNode !== editor) {
+                    blockParent = blockParent.parentNode;
+                }
+                if (blockParent && blockParent.parentNode === editor) {
+                    editor.insertBefore(newDiv, blockParent.nextSibling);
+                } else {
+                    editor.appendChild(newDiv);
+                }
+                setCursorStart(newDiv);
                 return;
             }
 
@@ -504,16 +517,23 @@ fmt.Println("Hallo")
                 parent.parentNode.replaceChild(txt, parent);
                 return;
             }
+            var el;
             try {
-                var el = document.createElement(tagName);
+                el = document.createElement(tagName);
                 range.surroundContents(el);
             } catch(ex) {
                 var content = range.extractContents();
-                var el = document.createElement(tagName);
+                el = document.createElement(tagName);
                 el.appendChild(content);
                 range.insertNode(el);
             }
+            // Cursor nach dem formatierten Element platzieren, damit die
+            // nächste Zeile keine Formatierung erbt.
+            var newRange = document.createRange();
+            newRange.setStartAfter(el);
+            newRange.collapse(true);
             sel.removeAllRanges();
+            sel.addRange(newRange);
             editor.focus();
         }
 
