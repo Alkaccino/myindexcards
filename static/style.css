@@ -31,6 +31,7 @@
 html {
     font-size: 16px;
     scroll-behavior: smooth;
+    overflow-y: scroll;
 }
 
 body {
@@ -56,6 +57,11 @@ a:hover {
     max-width: 900px;
     margin: 0 auto;
     padding: 0 1.5rem;
+}
+
+.container--wide {
+    max-width: none;
+    padding: 0 2rem;
 }
 
 /* --- Navbar --- */
@@ -213,6 +219,7 @@ a:hover {
     padding: 2.5rem;
     width: 100%;
     max-width: 750px;
+    margin: 0 auto;
     box-shadow: var(--shadow);
     position: relative;
     overflow: hidden;
@@ -739,6 +746,11 @@ a:hover {
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;
+    align-items: center;
+}
+
+.btn-group .inline-form {
+    display: contents;
 }
 
 /* --- Alert / Message --- */
@@ -784,7 +796,7 @@ a:hover {
 /* --- Deck Grid --- */
 .deck-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
     gap: 1.25rem;
     margin-bottom: 3rem;
 }
@@ -799,6 +811,7 @@ a:hover {
     transition: all var(--transition);
     display: block;
     color: var(--text);
+    cursor: pointer;
 }
 
 .deck-card::before {
@@ -816,6 +829,98 @@ a:hover {
     box-shadow: 0 8px 30px rgba(0,0,0,0.3);
     border-color: var(--deck-color, var(--accent));
     color: var(--text);
+}
+
+/* Multi-deck mix selection */
+.deck-card--selectable .deck-select-checkmark {
+    display: none;
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 1.4rem;
+    height: 1.4rem;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.75rem;
+    line-height: 1.4rem;
+    text-align: center;
+}
+
+.deck-card--selected {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent);
+    transform: translateY(-3px);
+}
+
+.deck-card--selected .deck-select-checkmark {
+    display: block;
+}
+
+.deck-name-link {
+    color: inherit;
+    text-decoration: none;
+}
+.deck-name-link:hover {
+    text-decoration: underline;
+}
+
+.deck-card-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.85rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+}
+
+.deck-action-btn {
+    flex: 1;
+    text-align: center;
+    padding: 0.35rem 0.5rem;
+    border-radius: calc(var(--radius) - 2px);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--accent);
+    background: transparent;
+    border: 1px solid var(--accent);
+    text-decoration: none;
+    transition: background var(--transition), color var(--transition);
+}
+
+.deck-action-btn:hover {
+    background: var(--accent);
+    color: #fff;
+}
+
+.deck-action-btn--muted {
+    color: var(--text-muted);
+    border-color: var(--border);
+}
+
+.deck-action-btn--muted:hover {
+    background: var(--border);
+    color: var(--text);
+}
+
+.mix-bar {
+    position: sticky;
+    bottom: 1.5rem;
+    margin-top: 1.5rem;
+    background: var(--bg-card);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 0.75rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    z-index: 10;
+}
+
+.mix-bar span {
+    flex: 1;
+    color: var(--text-muted);
+    font-size: 0.9rem;
 }
 
 .deck-card-name {
@@ -848,8 +953,8 @@ a:hover {
 
 /* --- Card List in Deck View --- */
 .card-list {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 0.75rem;
     margin-bottom: 3rem;
 }
@@ -860,10 +965,11 @@ a:hover {
     border-radius: var(--radius-sm);
     padding: 1rem 1.25rem;
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
-    align-items: center;
     transition: all var(--transition);
-    gap: 1rem;
+    gap: 0.6rem;
+    min-height: 90px;
 }
 
 .card-item:hover {
@@ -879,23 +985,32 @@ a:hover {
 .card-item-front {
     font-weight: 600;
     margin-bottom: 0.25rem;
-    white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
 }
 
 .card-item-back {
     color: var(--text-muted);
     font-size: 0.85rem;
-    white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 
 .card-item-actions {
     display: flex;
+    align-items: center;
     gap: 0.4rem;
+    justify-content: flex-end;
     flex-shrink: 0;
+}
+
+.card-item-actions .inline-form {
+    display: flex;
+    align-items: center;
 }
 
 /* --- Study Mode --- */
@@ -1252,10 +1367,15 @@ a:hover {
 }
 
 .rating-label {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.rating-hint {
+    font-size: 0.65rem;
     color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.02em;
 }
 
 /* --- Study Done --- */
@@ -1339,9 +1459,8 @@ a:hover {
         grid-template-columns: 1fr;
     }
 
-    .card-item {
-        flex-direction: column;
-        align-items: flex-start;
+    .card-list {
+        grid-template-columns: 1fr;
     }
 
     .card-item-actions {

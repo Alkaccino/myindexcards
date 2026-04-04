@@ -40,11 +40,11 @@ type Card struct {
 type ReviewRating int
 
 const (
-	RatingBlackout ReviewRating = 1 // Keine Ahnung
-	RatingHard     ReviewRating = 2 // Schwer
-	RatingOkay     ReviewRating = 3 // Okay
-	RatingGood     ReviewRating = 4 // Gut
-	RatingPerfect  ReviewRating = 5 // Perfekt
+	RatingAgain ReviewRating = 1 // Nochmal  – session re-queue soon
+	RatingHard  ReviewRating = 2 // Schwer   – session re-queue at end
+	RatingOkay  ReviewRating = 3 // Okay     – 1 hour
+	RatingGood  ReviewRating = 4 // Gut      – 1-2 days, grows
+	RatingEasy  ReviewRating = 5 // Einfach  – 5+ days, grows faster
 )
 
 // ExportData represents the format for import/export

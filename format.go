@@ -49,6 +49,8 @@ func FormatCardText(s string) template.HTML {
 // inlineCode handles backtick inline code, **bold**, and ==highlight== within a text fragment
 func inlineCode(s string) string {
 	s = inlineMarkup(s, "**", `<span class="card-bold">`, `</span>`)
+	s = inlineMarkup(s, "__", `<u>`, `</u>`)
+	s = inlineMarkup(s, "_", `<em>`, `</em>`)
 	s = inlineMarkup(s, "==", `<span class="card-highlight">`, `</span>`)
 	s = inlineBacktick(s)
 	return s
@@ -182,9 +184,27 @@ func formatLines(s string) string {
 				result.WriteString("</ul>")
 				inList = false
 			}
-			result.WriteString(inlineCode(line))
-			if i < len(lines)-1 {
-				result.WriteString("<br>")
+			align := ""
+			alignContent := trimmed
+			if strings.HasPrefix(trimmed, ":center:") {
+				align = "center"
+				alignContent = strings.TrimPrefix(trimmed, ":center:")
+			} else if strings.HasPrefix(trimmed, ":right:") {
+				align = "right"
+				alignContent = strings.TrimPrefix(trimmed, ":right:")
+			} else if strings.HasPrefix(trimmed, ":justify:") {
+				align = "justify"
+				alignContent = strings.TrimPrefix(trimmed, ":justify:")
+			}
+			if align != "" {
+				result.WriteString(`<div style="text-align:` + align + `">`)
+				result.WriteString(inlineCode(alignContent))
+				result.WriteString(`</div>`)
+			} else {
+				result.WriteString(inlineCode(line))
+				if i < len(lines)-1 {
+					result.WriteString("<br>")
+				}
 			}
 		}
 		i++

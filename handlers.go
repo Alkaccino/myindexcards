@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"io"
 	"log"
+	"math/rand/v2"
 	"net/http"
 	"sort"
 	"strings"
@@ -316,6 +317,21 @@ func (a *App) handleDeckDelete(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
+func (a *App) handleDeckReset(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+	user := a.getUser(r)
+	deckID := strings.TrimPrefix(r.URL.Path, "/deck/reset/")
+	if a.store.GetDeck(deckID, user.ID) == nil {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+	a.store.ResetDeck(deckID, user.ID)
+	http.Redirect(w, r, "/deck/"+deckID, http.StatusSeeOther)
+}
+
 func (a *App) handleDeckView(w http.ResponseWriter, r *http.Request) {
 	user := a.getUser(r)
 	deckID := strings.TrimPrefix(r.URL.Path, "/deck/")
@@ -443,6 +459,21 @@ func (a *App) handleCardDelete(w http.ResponseWriter, r *http.Request) {
 
 // --- Study Mode ---
 
+// parseQueue splits a comma-separated queue string into a slice of IDs, ignoring empty entries.
+func parseQueue(q string) []string {
+	if q == "" {
+		return nil
+	}
+	parts := strings.Split(q, ",")
+	result := parts[:0]
+	for _, p := range parts {
+		if p != "" {
+			result = append(result, p)
+		}
+	}
+	return result
+}
+
 func (a *App) handleStudy(w http.ResponseWriter, r *http.Request) {
 	user := a.getUser(r)
 	deckID := strings.TrimPrefix(r.URL.Path, "/study/")
@@ -454,97 +485,268 @@ func (a *App) handleStudy(w http.ResponseWriter, r *http.Request) {
 	}
 
 	allMode := r.URL.Query().Get("all") == "1"
+	q := r.URL.Query()
 
-	var studyCards []*Card
-	totalCards := 0
-	if allMode {
-		since := r.URL.Query().Get("since")
-		if since == "" {
-			http.Redirect(w, r, fmt.Sprintf("/study/%s?all=1&since=%d&r1=0&r2=0&r3=0&r4=0&r5=0", deckID, time.Now().UnixMilli()), http.StatusSeeOther)
-			return
-		}
-		var sinceMs int64
-		fmt.Sscanf(since, "%d", &sinceMs)
-		sinceTime := time.UnixMilli(sinceMs)
-		allCards := a.store.GetCardsByDeck(deckID, user.ID)
-		totalCards = len(allCards)
-		for _, c := range allCards {
-			if c.UpdatedAt.Before(sinceTime) || c.UpdatedAt.Equal(sinceTime) {
-				studyCards = append(studyCards, c)
-			}
-		}
-	} else {
-		studyCards = a.store.GetDueCards(deckID, user.ID)
-		// For due-mode, initialize session total on first visit
-		tParam := r.URL.Query().Get("t")
-		if tParam == "" && len(studyCards) > 0 {
-			http.Redirect(w, r, fmt.Sprintf("/study/%s?t=%d&r1=0&r2=0&r3=0&r4=0&r5=0", deckID, len(studyCards)), http.StatusSeeOther)
-			return
-		}
-		fmt.Sscanf(tParam, "%d", &totalCards)
-		if totalCards < len(studyCards) {
-			totalCards = len(studyCards)
-		}
-	}
-
-	// Parse session rating counters
-	var r1, r2, r3, r4, r5 int
-	fmt.Sscanf(r.URL.Query().Get("r1"), "%d", &r1)
-	fmt.Sscanf(r.URL.Query().Get("r2"), "%d", &r2)
-	fmt.Sscanf(r.URL.Query().Get("r3"), "%d", &r3)
-	fmt.Sscanf(r.URL.Query().Get("r4"), "%d", &r4)
-	fmt.Sscanf(r.URL.Query().Get("r5"), "%d", &r5)
-	reviewed := r1 + r2 + r3 + r4 + r5
-
-	if len(studyCards) == 0 {
+	// --- Session done ---
+	if q.Get("done") == "1" {
+		var r1, r2, r3, r4, r5, total int
+		fmt.Sscanf(q.Get("r1"), "%d", &r1)
+		fmt.Sscanf(q.Get("r2"), "%d", &r2)
+		fmt.Sscanf(q.Get("r3"), "%d", &r3)
+		fmt.Sscanf(q.Get("r4"), "%d", &r4)
+		fmt.Sscanf(q.Get("r5"), "%d", &r5)
+		fmt.Sscanf(q.Get("t"), "%d", &total)
 		a.render(w, "study_done.html", map[string]interface{}{
 			"User":     user,
 			"Deck":     deck,
 			"HasCards": a.store.GetCardCount(deckID, user.ID) > 0,
-			"Total":    reviewed,
-			"R1":       r1,
-			"R2":       r2,
-			"R3":       r3,
-			"R4":       r4,
-			"R5":       r5,
+			"Total":    total,
+			"R1":       r1, "R2": r2, "R3": r3, "R4": r4, "R5": r5,
 		})
 		return
 	}
 
-	reveal := r.URL.Query().Get("reveal") == "1"
-	cardID := r.URL.Query().Get("card")
-	var card *Card
-	if cardID != "" {
-		card = a.store.GetCard(cardID, user.ID)
-	}
-	if card == nil {
-		card = studyCards[0]
-		reveal = false
+	// --- Initial visit: build shuffled queue ---
+	if q.Get("card") == "" {
+		var cards []*Card
+		if allMode {
+			cards = a.store.GetCardsByDeck(deckID, user.ID)
+			rand.Shuffle(len(cards), func(i, j int) { cards[i], cards[j] = cards[j], cards[i] })
+		} else {
+			cards = a.store.GetDueCards(deckID, user.ID) // already shuffled
+		}
+		if len(cards) == 0 {
+			a.render(w, "study_done.html", map[string]interface{}{
+				"User":     user,
+				"Deck":     deck,
+				"HasCards": a.store.GetCardCount(deckID, user.ID) > 0,
+				"Total":    0,
+				"R1":       0, "R2": 0, "R3": 0, "R4": 0, "R5": 0,
+			})
+			return
+		}
+		ids := make([]string, len(cards))
+		for i, c := range cards {
+			ids[i] = c.ID
+		}
+		rest := strings.Join(ids[1:], ",")
+		redirect := fmt.Sprintf("/study/%s?card=%s&q=%s&t=%d&r1=0&r2=0&r3=0&r4=0&r5=0",
+			deckID, ids[0], rest, len(cards))
+		if allMode {
+			redirect += "&all=1"
+		}
+		http.Redirect(w, r, redirect, http.StatusSeeOther)
+		return
 	}
 
-	done := totalCards - len(studyCards)
+	// --- Show card ---
+	var r1, r2, r3, r4, r5, total int
+	fmt.Sscanf(q.Get("r1"), "%d", &r1)
+	fmt.Sscanf(q.Get("r2"), "%d", &r2)
+	fmt.Sscanf(q.Get("r3"), "%d", &r3)
+	fmt.Sscanf(q.Get("r4"), "%d", &r4)
+	fmt.Sscanf(q.Get("r5"), "%d", &r5)
+	fmt.Sscanf(q.Get("t"), "%d", &total)
+
+	queueIDs := parseQueue(q.Get("q"))
+	remaining := 1 + len(queueIDs)
+
+	card := a.store.GetCard(q.Get("card"), user.ID)
+	if card == nil {
+		http.Redirect(w, r, "/study/"+deckID, http.StatusSeeOther)
+		return
+	}
+
+	done := total - remaining
+	if done < 0 {
+		done = 0
+	}
 	progressPct := 0
-	if totalCards > 0 {
-		progressPct = done * 100 / totalCards
+	if total > 0 {
+		progressPct = done * 100 / total
 	}
 
 	a.render(w, "study.html", map[string]interface{}{
 		"User":        user,
 		"Deck":        deck,
 		"Card":        card,
-		"Reveal":      reveal,
-		"Remaining":   len(studyCards),
-		"Total":       totalCards,
+		"Reveal":      q.Get("reveal") == "1",
+		"Remaining":   remaining,
+		"Total":       total,
 		"Done":        done,
 		"ProgressPct": progressPct,
 		"AllMode":     allMode,
-		"Since":       r.URL.Query().Get("since"),
-		"T":           r.URL.Query().Get("t"),
-		"R1":          r1,
-		"R2":          r2,
-		"R3":          r3,
-		"R4":          r4,
-		"R5":          r5,
+		"Q":           q.Get("q"),
+		"T":           q.Get("t"),
+		"R1":          r1, "R2": r2, "R3": r3, "R4": r4, "R5": r5,
+	})
+}
+
+// handleStudyMix starts a mixed study session with multiple decks.
+// It accepts POST with checkboxes named "decks" or GET with ?decks=id1,id2,...
+func (a *App) handleStudyMix(w http.ResponseWriter, r *http.Request) {
+	user := a.getUser(r)
+
+	var deckIDs []string
+	if r.Method == http.MethodPost {
+		if err := r.ParseForm(); err != nil {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			return
+		}
+		deckIDs = r.Form["decks"]
+	} else {
+		ids := r.URL.Query().Get("decks")
+		if ids != "" {
+			deckIDs = strings.Split(ids, ",")
+		}
+	}
+
+	// validate and deduplicate
+	seen := map[string]bool{}
+	valid := deckIDs[:0]
+	for _, did := range deckIDs {
+		did = strings.TrimSpace(did)
+		if did == "" || seen[did] {
+			continue
+		}
+		if d := a.store.GetDeck(did, user.ID); d != nil {
+			valid = append(valid, did)
+			seen[did] = true
+		}
+	}
+	if len(valid) == 0 {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+	if len(valid) == 1 {
+		// Single deck: redirect to normal study
+		http.Redirect(w, r, "/study/"+valid[0], http.StatusSeeOther)
+		return
+	}
+
+	allMode := r.URL.Query().Get("all") == "1" || r.FormValue("all") == "1"
+
+	var cards []*Card
+	if allMode {
+		cards = a.store.GetCardsByDecks(valid, user.ID)
+	} else {
+		cards = a.store.GetDueCardsMulti(valid, user.ID)
+	}
+
+	// Use a synthetic deck name for the done-page
+	// Reuse handleStudy logic via /study/mix?card=...&decks=...
+	decksParam := strings.Join(valid, ",")
+
+	if len(cards) == 0 {
+		// Build deck names for the done page
+		var names []string
+		for _, did := range valid {
+			if d := a.store.GetDeck(did, user.ID); d != nil {
+				names = append(names, d.Name)
+			}
+		}
+		a.render(w, "study_done.html", map[string]interface{}{
+			"User":     user,
+			"Deck":     &Deck{ID: "mix", Name: strings.Join(names, " + ")},
+			"HasCards": true,
+			"MixDecks": decksParam,
+			"Total":    0,
+			"R1":       0, "R2": 0, "R3": 0, "R4": 0, "R5": 0,
+		})
+		return
+	}
+
+	ids := make([]string, len(cards))
+	for i, c := range cards {
+		ids[i] = c.ID
+	}
+	rest := strings.Join(ids[1:], ",")
+	redirect := fmt.Sprintf("/study/mix?card=%s&q=%s&t=%d&r1=0&r2=0&r3=0&r4=0&r5=0&decks=%s",
+		ids[0], rest, len(cards), decksParam)
+	if allMode {
+		redirect += "&all=1"
+	}
+	http.Redirect(w, r, redirect, http.StatusSeeOther)
+}
+
+// handleStudyMixShow handles GET /study/mix?card=...&q=...
+func (a *App) handleStudyMixShow(w http.ResponseWriter, r *http.Request) {
+	user := a.getUser(r)
+	q := r.URL.Query()
+	decksParam := q.Get("decks")
+	deckIDs := strings.Split(decksParam, ",")
+
+	// Build display name
+	var names []string
+	for _, did := range deckIDs {
+		if d := a.store.GetDeck(did, user.ID); d != nil {
+			names = append(names, d.Name)
+		}
+	}
+	mixName := strings.Join(names, " + ")
+	fakeDeck := &Deck{ID: "mix", Name: mixName}
+
+	allMode := q.Get("all") == "1"
+
+	if q.Get("done") == "1" {
+		var r1, r2, r3, r4, r5, total int
+		fmt.Sscanf(q.Get("r1"), "%d", &r1)
+		fmt.Sscanf(q.Get("r2"), "%d", &r2)
+		fmt.Sscanf(q.Get("r3"), "%d", &r3)
+		fmt.Sscanf(q.Get("r4"), "%d", &r4)
+		fmt.Sscanf(q.Get("r5"), "%d", &r5)
+		fmt.Sscanf(q.Get("t"), "%d", &total)
+		a.render(w, "study_done.html", map[string]interface{}{
+			"User":     user,
+			"Deck":     fakeDeck,
+			"HasCards": true,
+			"MixDecks": decksParam,
+			"Total":    total,
+			"R1":       r1, "R2": r2, "R3": r3, "R4": r4, "R5": r5,
+		})
+		return
+	}
+
+	var r1, r2, r3, r4, r5, total int
+	fmt.Sscanf(q.Get("r1"), "%d", &r1)
+	fmt.Sscanf(q.Get("r2"), "%d", &r2)
+	fmt.Sscanf(q.Get("r3"), "%d", &r3)
+	fmt.Sscanf(q.Get("r4"), "%d", &r4)
+	fmt.Sscanf(q.Get("r5"), "%d", &r5)
+	fmt.Sscanf(q.Get("t"), "%d", &total)
+
+	queueIDs := parseQueue(q.Get("q"))
+	remaining := 1 + len(queueIDs)
+
+	card := a.store.GetCard(q.Get("card"), user.ID)
+	if card == nil {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+
+	done := total - remaining
+	if done < 0 {
+		done = 0
+	}
+	progressPct := 0
+	if total > 0 {
+		progressPct = done * 100 / total
+	}
+
+	a.render(w, "study.html", map[string]interface{}{
+		"User":        user,
+		"Deck":        fakeDeck,
+		"Card":        card,
+		"Reveal":      q.Get("reveal") == "1",
+		"Remaining":   remaining,
+		"Total":       total,
+		"Done":        done,
+		"ProgressPct": progressPct,
+		"AllMode":     allMode,
+		"Q":           q.Get("q"),
+		"T":           q.Get("t"),
+		"MixDecks":    decksParam,
+		"R1":          r1, "R2": r2, "R3": r3, "R4": r4, "R5": r5,
 	})
 }
 
@@ -565,15 +767,17 @@ func (a *App) handleStudyRate(w http.ResponseWriter, r *http.Request) {
 		rating = 3
 	}
 
-	// Parse current session rating counters
-	var r1, r2, r3, r4, r5 int
+	// Parse current queue and stats
+	queue := parseQueue(r.FormValue("q"))
+	var r1, r2, r3, r4, r5, total int
 	fmt.Sscanf(r.FormValue("r1"), "%d", &r1)
 	fmt.Sscanf(r.FormValue("r2"), "%d", &r2)
 	fmt.Sscanf(r.FormValue("r3"), "%d", &r3)
 	fmt.Sscanf(r.FormValue("r4"), "%d", &r4)
 	fmt.Sscanf(r.FormValue("r5"), "%d", &r5)
+	fmt.Sscanf(r.FormValue("t"), "%d", &total)
+	allMode := r.FormValue("all") == "1"
 
-	// Increment the counter for this rating
 	switch rating {
 	case 1:
 		r1++
@@ -587,17 +791,58 @@ func (a *App) handleStudyRate(w http.ResponseWriter, r *http.Request) {
 		r5++
 	}
 
-	// Ratings 4-5: card is learned, apply SM-2 and remove from queue
-	// Ratings 1-3: card stays in queue (no SM-2 update, no timestamp change)
-	if rating >= 4 {
+	// Build new queue
+	var newQueue []string
+	switch rating {
+	case 1: // Nochmal: re-insert soon (after ~3 cards)
+		insertPos := 3
+		if insertPos > len(queue) {
+			insertPos = len(queue)
+		}
+		newQueue = make([]string, 0, len(queue)+1)
+		newQueue = append(newQueue, queue[:insertPos]...)
+		newQueue = append(newQueue, cardID)
+		newQueue = append(newQueue, queue[insertPos:]...)
+		total++
+	case 2: // Schwer: re-insert at end of session
+		newQueue = append(queue, cardID)
+		total++
+	default: // Okay/Gut/Einfach: apply SM-2, remove from queue
 		a.store.ReviewCard(cardID, user.ID, ReviewRating(rating))
+		newQueue = queue
 	}
 
-	redirect := fmt.Sprintf("/study/%s?r1=%d&r2=%d&r3=%d&r4=%d&r5=%d", deckID, r1, r2, r3, r4, r5)
-	if r.FormValue("all") == "1" {
-		redirect += "&all=1&since=" + r.FormValue("since")
-	} else if t := r.FormValue("t"); t != "" {
-		redirect += "&t=" + t
+	// Session done?
+	mixDecks := r.FormValue("mix_decks")
+	if len(newQueue) == 0 {
+		var redirect string
+		if mixDecks != "" {
+			redirect = fmt.Sprintf("/study/mix?done=1&t=%d&r1=%d&r2=%d&r3=%d&r4=%d&r5=%d&decks=%s",
+				total, r1, r2, r3, r4, r5, mixDecks)
+		} else {
+			redirect = fmt.Sprintf("/study/%s?done=1&t=%d&r1=%d&r2=%d&r3=%d&r4=%d&r5=%d",
+				deckID, total, r1, r2, r3, r4, r5)
+		}
+		if allMode {
+			redirect += "&all=1"
+		}
+		http.Redirect(w, r, redirect, http.StatusSeeOther)
+		return
+	}
+
+	// Next card
+	next := newQueue[0]
+	rest := strings.Join(newQueue[1:], ",")
+	var redirect string
+	if mixDecks != "" {
+		redirect = fmt.Sprintf("/study/mix?card=%s&q=%s&t=%d&r1=%d&r2=%d&r3=%d&r4=%d&r5=%d&decks=%s",
+			next, rest, total, r1, r2, r3, r4, r5, mixDecks)
+	} else {
+		redirect = fmt.Sprintf("/study/%s?card=%s&q=%s&t=%d&r1=%d&r2=%d&r3=%d&r4=%d&r5=%d",
+			deckID, next, rest, total, r1, r2, r3, r4, r5)
+	}
+	if allMode {
+		redirect += "&all=1"
 	}
 	http.Redirect(w, r, redirect, http.StatusSeeOther)
 }
@@ -706,6 +951,7 @@ func (a *App) SetupRoutes() *http.ServeMux {
 	mux.HandleFunc("/deck/create", a.requireAuth(a.handleDeckCreate))
 	mux.HandleFunc("/deck/edit/", a.requireAuth(a.handleDeckEdit))
 	mux.HandleFunc("/deck/delete/", a.requireAuth(a.handleDeckDelete))
+	mux.HandleFunc("/deck/reset/", a.requireAuth(a.handleDeckReset))
 	mux.HandleFunc("/deck/", a.requireAuth(a.handleDeckView))
 
 	// Card routes
@@ -714,6 +960,13 @@ func (a *App) SetupRoutes() *http.ServeMux {
 	mux.HandleFunc("/card/delete/", a.requireAuth(a.handleCardDelete))
 
 	// Study routes
+	mux.HandleFunc("/study/mix", a.requireAuth(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodPost || r.URL.Query().Get("card") == "" {
+			a.handleStudyMix(w, r)
+		} else {
+			a.handleStudyMixShow(w, r)
+		}
+	}))
 	mux.HandleFunc("/study/", a.requireAuth(a.handleStudy))
 	mux.HandleFunc("/study/rate", a.requireAuth(a.handleStudyRate))
 

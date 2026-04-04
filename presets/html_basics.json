@@ -1,0 +1,105 @@
+{
+  "version": "1.0",
+  "decks": [
+    {
+      "id": "preset-html-basics",
+      "user_id": "",
+      "name": "HTML Basics 🌐",
+      "color": "#E34F26",
+      "created_at": "2026-04-04T00:00:00Z",
+      "updated_at": "2026-04-04T00:00:00Z"
+    }
+  ],
+  "cards": [
+    {
+      "id": "html-01", "deck_id": "preset-html-basics", "user_id": "",
+      "front": "Was ist **HTML** und wofür steht die Abkürzung?",
+      "back": "**HTML** steht für __HyperText Markup Language__.\n\n• Es ist die ==Grundstruktur== jeder Webseite\n• Beschreibt den _Inhalt_ und die _Bedeutung_ von Elementen\n• Kein Programmiercode, sondern eine **Auszeichnungssprache**\n\nBrowser lesen HTML und rendern daraus eine sichtbare Seite.",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    },
+    {
+      "id": "html-02", "deck_id": "preset-html-basics", "user_id": "",
+      "front": "Wie sieht die **Grundstruktur** eines HTML-Dokuments aus?",
+      "back": "```\n<!DOCTYPE html>\n<html lang=\"de\">\n  <head>\n    <meta charset=\"UTF-8\">\n    <title>Seitentitel</title>\n  </head>\n  <body>\n    <h1>Hallo Welt</h1>\n  </body>\n</html>\n```\n\n• ==`<!DOCTYPE html>`== → erklärt dem Browser, dass es HTML5 ist\n• `<head>` → unsichtbare Metadaten\n• `<body>` → der sichtbare Inhalt",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    },
+    {
+      "id": "html-03", "deck_id": "preset-html-basics", "user_id": "",
+      "front": "Was ist ein **HTML-Tag**? Erkläre Aufbau und Typen.",
+      "back": "Ein Tag ist ein **Auszeichner** in spitzen Klammern:\n\n```\n<tagname attribut=\"wert\">Inhalt</tagname>\n```\n\n| Typ | Beispiel | Beschreibung |\n|---|---|---|\n| Öffnend | `<p>` | Startet Element |\n| Schließend | `</p>` | Beendet Element |\n| Selbstschließend | `<img />` | Kein Inhalt |\n\n_Wichtig:_ Tags sind ==case-insensitive==, aber `lowercase` ist Best Practice.",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    },
+    {
+      "id": "html-04", "deck_id": "preset-html-basics", "user_id": "",
+      "front": "Was ist der Unterschied zwischen **Block-** und **Inline-Elementen**?",
+      "back": "| | **Block** | **Inline** |\n|---|---|---|\n| Zeile | Neue Zeile | Bleibt in der Zeile |\n| Breite | 100 % des Elternelements | Nur so breit wie nötig |\n| Beispiele | `<div>`, `<p>`, `<h1>` | `<span>`, `<a>`, `<strong>` |\n\n```\n<p>Das ist ein <strong>Wort</strong> im Absatz.</p>\n```\n\n==`<strong>`== bricht die Zeile _nicht_ um.",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    },
+    {
+      "id": "html-05", "deck_id": "preset-html-basics", "user_id": "",
+      "front": "Welche **Überschriften-Tags** gibt es und wie werden sie eingesetzt?",
+      "back": "HTML hat **6 Ebenen**: `<h1>` bis `<h6>`\n\n```\n<h1>Hauptüberschrift</h1>\n<h2>Unterüberschrift</h2>\n<h3>Abschnitt</h3>\n```\n\n• ==`<h1>`== sollte pro Seite **nur einmal** vorkommen\n• Die Reihenfolge soll _logisch_ sein (nicht überspringen)\n• Beeinflusst **SEO** und Barrierefreiheit",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    },
+    {
+      "id": "html-06", "deck_id": "preset-html-basics", "user_id": "",
+      "front": "Wie erstellt man einen **Link** in HTML?",
+      "back": "Mit dem `<a>`-Tag (**Anchor**):\n\n```\n<a href=\"https://example.com\" target=\"_blank\">Besuche Example</a>\n```\n\n| Attribut | Bedeutung |\n|---|---|\n| `href` | Ziel-URL |\n| `target=\"_blank\"` | Öffnet in neuem Tab |\n| `rel=\"noopener\"` | ==Sicherheits-Best-Practice== |\n\n_Tipp:_ `href=\"#abschnitt\"` springt zu einem Element mit `id=\"abschnitt\"`.",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    },
+    {
+      "id": "html-07", "deck_id": "preset-html-basics", "user_id": "",
+      "front": "Wie bindet man ein **Bild** ein? Welche Attribute sind wichtig?",
+      "back": "```\n<img src=\"bild.jpg\" alt=\"Beschreibung\" width=\"400\">\n```\n\n| Attribut | Wichtigkeit |\n|---|---|\n| `src` | **Pflicht** – Pfad oder URL |\n| `alt` | ==**Pflicht**== – Text für Screenreader & Fehlerfall |\n| `width`/`height` | Empfohlen – verhindert Layout-Sprung |\n| `loading=\"lazy\"` | _Optional_ – lädt Bild erst bei Sichtbarkeit |\n\n`<img>` ist ein **selbstschließender** Tag.",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    },
+    {
+      "id": "html-08", "deck_id": "preset-html-basics", "user_id": "",
+      "front": "Wie erstellt man **Listen** in HTML?",
+      "back": "**Ungeordnete Liste** (Punkte):\n```\n<ul>\n  <li>Apfel</li>\n  <li>Banane</li>\n</ul>\n```\n\n**Geordnete Liste** (Nummern):\n```\n<ol>\n  <li>Schritt 1</li>\n  <li>Schritt 2</li>\n</ol>\n```\n\n==Listen können verschachtelt werden!==\n_Merke:_ `<li>` steht immer _in_ `<ul>` oder `<ol>`.",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    },
+    {
+      "id": "html-09", "deck_id": "preset-html-basics", "user_id": "",
+      "front": "Wie baut man eine **Tabelle** in HTML auf?",
+      "back": "```\n<table>\n  <thead>\n    <tr>\n      <th>Name</th>\n      <th>Alter</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>Anna</td>\n      <td>25</td>\n    </tr>\n  </tbody>\n</table>\n```\n\n| Tag | Bedeutung |\n|---|---|\n| `<table>` | Tabellen-Container |\n| `<thead>` / `<tbody>` | Kopf / Körper |\n| `<tr>` | Tabellenzeile |\n| ==`<th>`== | **Kopfzelle** (fett, zentriert) |\n| `<td>` | Datenzelle |",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    },
+    {
+      "id": "html-10", "deck_id": "preset-html-basics", "user_id": "",
+      "front": "Wie baut man ein **Formular** in HTML?",
+      "back": "```\n<form method=\"POST\" action=\"/submit\">\n  <input type=\"text\" name=\"name\" placeholder=\"Dein Name\">\n  <input type=\"email\" name=\"email\">\n  <button type=\"submit\">Senden</button>\n</form>\n```\n\nWichtige `<input>`-Typen:\n• ==`text`== – freier Text\n• `email` – E-Mail mit Validierung\n• `password` – verbirgt Eingabe\n• `checkbox` / `radio` – Auswahl\n• `number` – nur Zahlen\n\n_Das `name`-Attribut ist **Pflicht** für die Datenübertragung._",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    },
+    {
+      "id": "html-11", "deck_id": "preset-html-basics", "user_id": "",
+      "front": "Was sind **semantische HTML-Elemente**? Nenne Beispiele.",
+      "back": "Semantische Elemente beschreiben ihre **Bedeutung** statt ihr Aussehen:\n\n| Tag | Bedeutung |\n|---|---|\n| `<header>` | Kopfbereich der Seite |\n| `<nav>` | Navigationsmenü |\n| `<main>` | Hauptinhalt |\n| `<article>` | Eigenständiger Inhalt |\n| `<section>` | Thematischer Abschnitt |\n| `<footer>` | Fußbereich |\n| `<aside>` | Seiteninhalt / Ergänzung |\n\n==Verwende semantische Tags statt `<div>` wo immer möglich!==\n_Vorteile:_ bessere **SEO**, Barrierefreiheit, Lesbarkeit.",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    },
+    {
+      "id": "html-12", "deck_id": "preset-html-basics", "user_id": "",
+      "front": "Was ist der Unterschied zwischen `<div>` und `<span>`?",
+      "back": "| | `<div>` | `<span>` |\n|---|---|---|\n| Typ | **Block** | **Inline** |\n| Zweck | Gruppen von Elementen | Teile eines Textes |\n| Zeilenumbruch | Ja | Nein |\n\n```\n<div class=\"karte\">\n  <p>Text mit <span class=\"highlight\">Hervorhebung</span>.</p>\n</div>\n```\n\n_Beide haben keine eigene Bedeutung_ – sie dienen nur als ==Container für CSS und JS==.",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    },
+    {
+      "id": "html-13", "deck_id": "preset-html-basics", "user_id": "",
+      "front": "Was ist der Unterschied zwischen `class` und `id` in HTML?",
+      "back": "| | `class` | `id` |\n|---|---|---|\n| Eindeutigkeit | Mehrfach verwendbar | ==**Einmalig** pro Seite== |\n| CSS-Selektor | `.klassenname` | `#bezeichner` |\n| JS-Zugriff | `querySelectorAll` | `getElementById` |\n\n```\n<div class=\"karte\">...</div>  <!-- mehrfach OK -->\n<div id=\"header\">...</div>   <!-- nur einmal -->\n```\n\n_Faustregel:_ `id` für eindeutige Ankerpunkte, `class` für alles andere.",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    },
+    {
+      "id": "html-14", "deck_id": "preset-html-basics", "user_id": "",
+      "front": "Wofür werden `<strong>` und `<em>` verwendet?",
+      "back": "• `<strong>` → **inhaltliche Wichtigkeit** (wird fett dargestellt)\n• `<em>` → _Betonung_ (wird kursiv dargestellt)\n\n```\n<p>Das ist <strong>sehr wichtig</strong> und <em>betont</em>.</p>\n```\n\n==Nicht verwechseln mit `<b>` und `<i>`!==\n\n| Tag | Bedeutung |\n|---|---|\n| `<strong>` | Semantisch wichtig |\n| `<b>` | Nur visuell fett (kein Bedeutungsunterschied) |\n| `<em>` | Semantische Betonung |\n| `<i>` | Nur visuell kursiv |",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    },
+    {
+      "id": "html-15", "deck_id": "preset-html-basics", "user_id": "",
+      "front": "Was macht das `<meta charset=\"UTF-8\">`-Tag?",
+      "back": "Es legt die **Zeichenkodierung** des Dokuments fest.\n\n```\n<head>\n  <meta charset=\"UTF-8\">\n</head>\n```\n\n• ==**UTF-8**== unterstützt _nahezu alle Zeichen_ aller Sprachen\n• Verhindert Darstellungsfehler bei Umlauten: ä, ö, ü, ß\n• Muss **so früh wie möglich** im `<head>` stehen\n\n_Ohne diese Angabe können Sonderzeichen falsch dargestellt werden._",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    }
+  ]
+}

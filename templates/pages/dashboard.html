@@ -9,7 +9,7 @@
 </head>
 <body>
     <nav class="navbar">
-        <div class="container">
+        <div class="container container--wide">
             <a href="/" class="navbar-brand">🃏 <span>MYIndexCards</span></a>
             <div class="navbar-links">
                 <a href="/import">📥 Import</a>
@@ -20,7 +20,7 @@
         </div>
     </nav>
 
-    <div class="container">
+    <div class="container container--wide">
         <div class="page-header">
             <div>
                 <h1 class="page-title">Meine Stapel</h1>
@@ -30,12 +30,15 @@
         </div>
 
         {{if .Decks}}
+        <form id="mix-form" method="POST" action="/study/mix">
         <div class="deck-grid">
             {{range .Decks}}
-            <a href="/deck/{{.ID}}" class="deck-card" style="--deck-color: {{.Color}}">
+            <label class="deck-card deck-card--selectable" style="--deck-color: {{.Color}}">
+                <input type="checkbox" name="decks" value="{{.ID}}" class="deck-select-cb" hidden>
+                <div class="deck-select-checkmark" aria-hidden="true">✓</div>
                 <div class="deck-card-name">
                     <span class="color-preview" style="background: {{.Color}}"></span>
-                    {{.Name}}
+                    <a href="/deck/{{.ID}}" class="deck-name-link">{{.Name}}</a>
                 </div>
                 <div class="deck-card-stats">
                     <div class="deck-stat">
@@ -45,9 +48,19 @@
                         📝 <span class="deck-stat-value deck-stat-due">{{dueCount .ID $.User.ID}}</span> fällig
                     </div>
                 </div>
-            </a>
+                <div class="deck-card-actions">
+                    <a href="/study/{{.ID}}" class="deck-action-btn">▶ Lernen</a>
+                    <a href="/deck/edit/{{.ID}}" class="deck-action-btn deck-action-btn--muted">✏ Bearbeiten</a>
+                </div>
+            </label>
             {{end}}
         </div>
+        <div class="mix-bar" id="mix-bar" hidden>
+            <span id="mix-bar-label">0 Stapel ausgewählt</span>
+            <button type="submit" class="btn btn-primary">▶ Gemischt lernen</button>
+            <button type="button" class="btn btn-secondary" id="mix-cancel">Abbrechen</button>
+        </div>
+        </form>
         {{else}}
         <div class="empty-state">
             <div class="empty-state-icon">📚</div>
@@ -60,6 +73,43 @@
     </div>
 
     <footer class="footer">MYIndexCards &mdash; Lernen leicht gemacht</footer>
+
+    <script>
+    (function() {
+        const checkboxes = document.querySelectorAll('.deck-select-cb');
+        const bar = document.getElementById('mix-bar');
+        const label = document.getElementById('mix-bar-label');
+        const cancelBtn = document.getElementById('mix-cancel');
+
+        function update() {
+            const count = document.querySelectorAll('.deck-select-cb:checked').length;
+            bar.hidden = count < 2;
+            label.textContent = count + (count === 1 ? ' Stapel ausgewählt' : ' Stapel ausgewählt');
+            document.querySelectorAll('.deck-card--selectable').forEach(card => {
+                const cb = card.querySelector('.deck-select-cb');
+                card.classList.toggle('deck-card--selected', cb.checked);
+            });
+        }
+
+        checkboxes.forEach(cb => cb.addEventListener('change', update));
+
+        // Clicking the card toggles selection; clicking the name link or action buttons navigates
+        document.querySelectorAll('.deck-card--selectable').forEach(card => {
+            card.addEventListener('click', function(e) {
+                if (e.target.closest('.deck-name-link')) return;
+                if (e.target.closest('.deck-card-actions')) return;
+                const cb = card.querySelector('.deck-select-cb');
+                cb.checked = !cb.checked;
+                update();
+            });
+        });
+
+        cancelBtn.addEventListener('click', function() {
+            checkboxes.forEach(cb => { cb.checked = false; });
+            update();
+        });
+    })();
+    </script>
 </body>
 </html>
 {{end}}

@@ -1,0 +1,105 @@
+{
+  "version": "1.0",
+  "decks": [
+    {
+      "id": "preset-css-basics",
+      "user_id": "",
+      "name": "CSS Basics 🎨",
+      "color": "#264DE4",
+      "created_at": "2026-04-04T00:00:00Z",
+      "updated_at": "2026-04-04T00:00:00Z"
+    }
+  ],
+  "cards": [
+    {
+      "id": "css-01", "deck_id": "preset-css-basics", "user_id": "",
+      "front": "Was ist **CSS** und wofür steht die Abkürzung?",
+      "back": "**CSS** steht für __Cascading Style Sheets__.\n\n• Zuständig für das **visuelle Aussehen** von HTML-Seiten\n• Trennt _Inhalt_ (HTML) von _Darstellung_ (CSS)\n• „Cascading\" = Regeln werden ==vererbt und überschrieben==\n\nOhne CSS sieht jede Webseite aus wie ein unformatiertes Textdokument.",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    },
+    {
+      "id": "css-02", "deck_id": "preset-css-basics", "user_id": "",
+      "front": "Auf welche **3 Arten** kann man CSS in HTML einbinden?",
+      "back": "**1. Extern** (==empfohlen==):\n```\n<link rel=\"stylesheet\" href=\"style.css\">\n```\n\n**2. Intern** (im `<head>`):\n```\n<style>\n  p { color: red; }\n</style>\n```\n\n**3. Inline** (_vermeiden!_):\n```\n<p style=\"color: red;\">Text</p>\n```\n\n_Faustregel:_ Immer externe Stylesheets verwenden – bessere Wartbarkeit.",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    },
+    {
+      "id": "css-03", "deck_id": "preset-css-basics", "user_id": "",
+      "front": "Wie ist eine **CSS-Regel** aufgebaut?",
+      "back": "```\nselektor {\n    eigenschaft: wert;\n    eigenschaft: wert;\n}\n```\n\nBeispiel:\n```\nh1 {\n    color: navy;\n    font-size: 2rem;\n    font-weight: bold;\n}\n```\n\n| Teil | Bedeutung |\n|---|---|\n| ==Selektor== | Welches HTML-Element? |\n| Eigenschaft | Was wird gestylt? |\n| Wert | Wie wird es gestylt? |\n| Deklarationsblock | Alles zwischen `{ }` |",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    },
+    {
+      "id": "css-04", "deck_id": "preset-css-basics", "user_id": "",
+      "front": "Nenne die wichtigsten **CSS-Selektor-Typen** mit Beispielen.",
+      "back": "| Typ | Syntax | Selektiert |\n|---|---|---|\n| Element | `p` | Alle `<p>`-Tags |\n| Klasse | `.card` | Alle mit `class=\"card\"` |\n| ==ID== | `#header` | Das Element mit `id=\"header\"` |\n| Kombination | `div.card` | `<div class=\"card\">` |\n| Nachfahre | `nav a` | `<a>` _innerhalb_ von `<nav>` |\n| Kind | `ul > li` | Direkte `<li>`-Kinder |\n| Pseudoklasse | `a:hover` | `<a>` beim Überfahren |\n\n_Merke:_ `.` für Klassen, `#` für IDs.",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    },
+    {
+      "id": "css-05", "deck_id": "preset-css-basics", "user_id": "",
+      "front": "Was ist das **CSS Box-Modell**?",
+      "back": "Jedes HTML-Element ist eine Box mit 4 Schichten (von außen nach innen):\n\n• ==`margin`== – Außenabstand (zwischen Elementen, transparent)\n• `border` – Rahmen um das Element\n• `padding` – Innenabstand (Abstand Inhalt zum Rand)\n• `content` – **eigentlicher Inhalt** (Text, Bild etc.)\n\n```\n.element {\n    margin: 20px;\n    border: 2px solid black;\n    padding: 10px;\n    width: 200px;\n}\n```\n\n_Merke:_ **M**argin → **B**order → **P**adding → **C**ontent",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    },
+    {
+      "id": "css-06", "deck_id": "preset-css-basics", "user_id": "",
+      "front": "Was bewirkt `box-sizing: border-box`?",
+      "back": "Ohne `border-box` (Standard `content-box`):\n```\nwidth: 200px → tatsächliche Breite = 200 + padding + border\n```\n\nMit ==`border-box`==:\n```\nwidth: 200px → tatsächliche Breite bleibt 200px\npx wird auch padding + border eingerechnet\n```\n\n_Best Practice:_ Fast immer für alle Elemente setzen:\n```\n*, *::before, *::after {\n    box-sizing: border-box;\n}\n```\n\nMacht Layouts **vorhersehbarer und einfacher**.",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    },
+    {
+      "id": "css-07", "deck_id": "preset-css-basics", "user_id": "",
+      "front": "Was ist **CSS-Spezifität** und wie wird sie berechnet?",
+      "back": "Spezifität bestimmt, ==welche Regel gewinnt== wenn mehrere auf dasselbe Element zutreffen.\n\n| Selektor | Punkte |\n|---|---|\n| Inline-Style | **1000** |\n| `#id` | 100 |\n| `.klasse`, `:hover` | 10 |\n| `element` (`p`, `div`) | 1 |\n\nBeispiel:\n```\n#nav .link a  → 100 + 10 + 1 = 111\np.text        → 1  + 10     = 11\n```\n\n_Tipp:_ `!important` überschreibt alles – **nur im Notfall verwenden!**",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    },
+    {
+      "id": "css-08", "deck_id": "preset-css-basics", "user_id": "",
+      "front": "Was ist der Unterschied zwischen `px`, `em`, `rem` und `%`?",
+      "back": "| Einheit | Bezug | Wann nutzen |\n|---|---|---|\n| `px` | **Absolut**, 1 Bildschirmpixel | Borders, Icons |\n| `em` | Relativ zur _Elternelement_-Schriftgröße | Komponenten-Spacing |\n| ==`rem`== | Relativ zur **Root**-Schriftgröße (`<html>`) | Typografie, Layout |\n| `%` | Relativ zum Elternelement | Breiten, Höhen |\n| `vw`/`vh` | Relativ zum **Viewport** | Fullscreen-Layouts |\n\n_Faustregel:_ `rem` für Schriftgrößen und Abstände, `%` oder `fr` für Breiten.",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    },
+    {
+      "id": "css-09", "deck_id": "preset-css-basics", "user_id": "",
+      "front": "Was ist **Flexbox** und welche Eigenschaften braucht man am häufigsten?",
+      "back": "Flexbox ist ein ==eindimensionales Layout-System== (Zeile _oder_ Spalte).\n\n```\n.container {\n    display: flex;\n    flex-direction: row;      /* row | column */\n    justify-content: center;  /* Hauptachse */\n    align-items: center;      /* Querachse */\n    gap: 1rem;\n    flex-wrap: wrap;\n}\n```\n\n| Eigenschaft | Zweck |\n|---|---|\n| `justify-content` | Verteilung auf Hauptachse |\n| `align-items` | Ausrichtung auf Querachse |\n| `flex-wrap` | Umbruch bei Platzmangel |\n| `flex: 1` | **Kind** füllt verfügbaren Platz |",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    },
+    {
+      "id": "css-10", "deck_id": "preset-css-basics", "user_id": "",
+      "front": "Was ist **CSS Grid** und wie unterscheidet es sich von Flexbox?",
+      "back": "CSS Grid ist ein ==zweidimensionales Layout-System== (Zeilen **und** Spalten).\n\n```\n.grid {\n    display: grid;\n    grid-template-columns: repeat(3, 1fr);\n    gap: 1rem;\n}\n```\n\n| | **Flexbox** | **Grid** |\n|---|---|---|\n| Dimensionen | 1D (Zeile oder Spalte) | **2D** (beides) |\n| Stärke | Inhalts-Ausrichtung | Seitenlayout |\n| Typischer Einsatz | Navbar, Buttons | Karten-Raster, Seiten-Layout |\n\n_Merke:_ Flexbox für **Komponenten**, Grid für **Seiten-Layouts**.",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    },
+    {
+      "id": "css-11", "deck_id": "preset-css-basics", "user_id": "",
+      "front": "Wie funktioniert **CSS-Positionierung**? Erkläre alle `position`-Werte.",
+      "back": "```\n.element { position: static | relative | absolute | fixed | sticky; }\n```\n\n| Wert | Verhalten |\n|---|---|\n| `static` | _Standard_ – im normalen Dokumentfluss |\n| `relative` | Relativ zur ==eigenen Ursprungsposition== |\n| `absolute` | Herausgelöst – relativ zum nächsten `relative`-Eltern |\n| `fixed` | **Fest im Viewport** – scrollt nicht mit |\n| `sticky` | Zwischen `relative` und `fixed` (klebt beim Scrollen) |\n\nMit `top`, `right`, `bottom`, `left` wird die Position gesetzt.",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    },
+    {
+      "id": "css-12", "deck_id": "preset-css-basics", "user_id": "",
+      "front": "Was sind **CSS-Pseudoklassen** und **Pseudoelemente**?",
+      "back": "**Pseudoklassen** (Zustand des Elements):\n```\na:hover   { color: blue; }     /* Maus drüber */\ninput:focus { outline: 2px solid; } /* Fokussiert */\nli:first-child { font-weight: bold; }\n```\n\n**Pseudoelemente** (==virtueller Inhalt==):\n```\np::first-line { font-size: 1.2em; }\n.btn::before  { content: \"→ \"; }\n.btn::after   { content: \" ←\"; }\n```\n\n_Merke:_ Pseudoklassen mit **einem** Doppelpunkt `:`\nPseudoelemente mit **zwei** Doppelpunkten `::`",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    },
+    {
+      "id": "css-13", "deck_id": "preset-css-basics", "user_id": "",
+      "front": "Was sind **Media Queries** und wie schreibt man sie?",
+      "back": "Media Queries ermöglichen ==responsives Design== – unterschiedliche Stile je nach Bildschirmgröße.\n\n```\n/* Mobil (Standard) */\n.container { padding: 1rem; }\n\n/* Tablet und größer */\n@media (min-width: 768px) {\n    .container { padding: 2rem; }\n}\n\n/* Desktop */\n@media (min-width: 1024px) {\n    .grid { grid-template-columns: repeat(3, 1fr); }\n}\n```\n\n_Best Practice:_ **Mobile-First** – Standard-Styles für Mobil, dann größere Breakpoints.",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    },
+    {
+      "id": "css-14", "deck_id": "preset-css-basics", "user_id": "",
+      "front": "Was sind **CSS Custom Properties** (CSS-Variablen)?",
+      "back": "CSS-Variablen werden mit `--` deklariert und mit `var()` verwendet:\n\n```\n:root {\n    --farbe-primary: #3b82f6;\n    --abstand-md: 1rem;\n    --radius: 8px;\n}\n\n.button {\n    background: var(--farbe-primary);\n    padding: var(--abstand-md);\n    border-radius: var(--radius);\n}\n```\n\n==Vorteile==:\n• Einmal ändern → überall aktualisiert\n• Können per JS dynamisch geändert werden\n• **Theming** (Dark/Light Mode) einfach umsetzbar",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    },
+    {
+      "id": "css-15", "deck_id": "preset-css-basics", "user_id": "",
+      "front": "Wie zentriert man ein Element **horizontal und vertikal** mit CSS?",
+      "back": "**Mit Flexbox** (==empfohlen==):\n```\n.parent {\n    display: flex;\n    justify-content: center;\n    align-items: center;\n}\n```\n\n**Mit Grid**:\n```\n.parent {\n    display: grid;\n    place-items: center;\n}\n```\n\n**Mit `margin: auto`** (nur horizontal, bei Block-Elementen):\n```\n.element {\n    width: 600px;\n    margin: 0 auto;\n}\n```\n\n_Frühere Methode mit `position: absolute` ist heute_ **_selten nötig_**.",
+      "ease": 2.5, "interval": 0, "repetition": 0, "next_review": "2026-04-04T00:00:00Z", "created_at": "2026-04-04T00:00:00Z", "updated_at": "2026-04-04T00:00:00Z"
+    }
+  ]
+}

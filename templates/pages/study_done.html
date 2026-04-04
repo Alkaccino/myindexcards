@@ -32,7 +32,7 @@
                 <p class="study-summary-total"><strong>{{.Total}}</strong> Bewertungen abgegeben</p>
                 <div class="study-summary-bars">
                     {{if gt .R5 0}}<div class="summary-row">
-                        <span class="summary-label">🌟 Perfekt</span>
+                        <span class="summary-label">🌟 Einfach</span>
                         <div class="summary-bar-bg"><div class="summary-bar-fill summary-bar-5" style="width: {{percent .R5 .Total}}%"></div></div>
                         <span class="summary-count">{{.R5}}</span>
                     </div>{{end}}
@@ -52,7 +52,7 @@
                         <span class="summary-count">{{.R2}}</span>
                     </div>{{end}}
                     {{if gt .R1 0}}<div class="summary-row">
-                        <span class="summary-label">😵 Keine Ahnung</span>
+                        <span class="summary-label">😵 Nochmal</span>
                         <div class="summary-bar-bg"><div class="summary-bar-fill summary-bar-1" style="width: {{percent .R1 .Total}}%"></div></div>
                         <span class="summary-count">{{.R1}}</span>
                     </div>{{end}}
@@ -61,9 +61,13 @@
             {{end}}
 
             <div class="btn-group" style="justify-content: center;">
+                {{if .MixDecks}}
+                <a href="/study/mix?decks={{.MixDecks}}&all=1" class="btn btn-secondary">🔁 Alle wiederholen</a>
+                {{else}}
                 <a href="/deck/{{.Deck.ID}}" class="btn btn-secondary">← Zum Stapel</a>
                 {{if .HasCards}}
                 <a href="/study/{{.Deck.ID}}?all=1" class="btn btn-secondary">🔁 Alle wiederholen</a>
+                {{end}}
                 {{end}}
                 <a href="/" class="btn btn-primary">🏠 Dashboard</a>
             </div>

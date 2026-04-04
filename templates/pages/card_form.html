@@ -9,7 +9,7 @@
 </head>
 <body>
     <nav class="navbar">
-        <div class="container">
+        <div class="container container--wide">
             <a href="/" class="navbar-brand">🃏 <span>MYIndexCards</span></a>
             <div class="navbar-links">
                 <span class="navbar-user">{{.User.Username}}</span>
@@ -18,7 +18,7 @@
         </div>
     </nav>
 
-    <div class="container">
+    <div class="container container--wide">
         <div class="page-header">
             <h1 class="page-title">{{if .IsEdit}}Karte bearbeiten{{else}}Neue Karte{{end}}</h1>
             <a href="/deck/{{.Deck.ID}}" class="btn btn-secondary">← Zurück zu {{.Deck.Name}}</a>
@@ -42,6 +42,12 @@
                         <button type="button" class="tb-btn" data-action="bold" title="Fett">
                             <span class="tb-icon"><b>B</b></span>
                         </button>
+                        <button type="button" class="tb-btn" data-action="italic" title="Kursiv">
+                            <span class="tb-icon"><i>I</i></span>
+                        </button>
+                        <button type="button" class="tb-btn" data-action="underline" title="Unterstrichen">
+                            <span class="tb-icon"><u>U</u></span>
+                        </button>
                         <button type="button" class="tb-btn" data-action="highlight" title="Hervorheben">
                             <span class="tb-icon" style="background:#facc15;color:#000;padding:0 3px;border-radius:2px;font-size:0.75rem;">H</span>
                         </button>
@@ -64,6 +70,19 @@
                         <span class="tb-sep"></span>
                         <button type="button" class="tb-btn" data-action="divider" title="Trennlinie">
                             <span class="tb-icon">―</span>
+                        </button>
+                        <span class="tb-sep"></span>
+                        <button type="button" class="tb-btn" data-action="align-left" title="Linksbündig">
+                            <span class="tb-icon">⇐</span>
+                        </button>
+                        <button type="button" class="tb-btn" data-action="align-center" title="Zentriert">
+                            <span class="tb-icon">⇔</span>
+                        </button>
+                        <button type="button" class="tb-btn" data-action="align-right" title="Rechtsbündig">
+                            <span class="tb-icon">⇒</span>
+                        </button>
+                        <button type="button" class="tb-btn" data-action="align-justify" title="Blocksatz">
+                            <span class="tb-icon">≡</span>
                         </button>
                     </div>
 
@@ -104,6 +123,8 @@
                     <div class="ref-section">
                         <h4>Text-Formatierung</h4>
                         <pre class="ref-example">**fetter Text**
+_kursiver Text_
+__unterstrichener Text__
 ==hervorgehobener Text==
 `inline code`</pre>
                     </div>
@@ -135,6 +156,12 @@ fmt.Println("Hallo")
 |---|---|---|
 | Z1 | A | B |</pre>
                         <p class="ref-hint">Erste Kopfzelle leer → 1. Spalte = Überschrift</p>
+                    </div>
+                    <div class="ref-section">
+                        <h4>Textausrichtung</h4>
+                        <pre class="ref-example">:center:Zentriert
+:right:Rechtsbündig
+:justify:Blocksatz</pre>
                     </div>
                 </div>
             </details>
@@ -288,6 +315,8 @@ fmt.Println("Hallo")
             var action = btn.dataset.action;
             switch(action) {
                 case 'bold': wrapSel('strong'); break;
+                case 'italic': wrapSel('em'); break;
+                case 'underline': wrapSel('u'); break;
                 case 'highlight': wrapSel('mark'); break;
                 case 'inline-code': wrapSel('code'); break;
                 case 'divider': insertDivider(); break;
@@ -295,6 +324,10 @@ fmt.Println("Hallo")
                 case 'table': showConfig('table-config'); break;
                 case 'list': insertList(); break;
                 case 'image': showConfig('image-config'); break;
+                case 'align-left':    setBlockAlign('');        break;
+                case 'align-center':  setBlockAlign('center');  break;
+                case 'align-right':   setBlockAlign('right');   break;
+                case 'align-justify': setBlockAlign('justify'); break;
             }
         });
 
@@ -381,6 +414,24 @@ fmt.Println("Hallo")
             }
         }
         function hideConfig(id) { document.getElementById(id).style.display = 'none'; }
+
+        // ==================== ALIGNMENT ====================
+        function setBlockAlign(align) {
+            var sel = window.getSelection();
+            if (!sel || !sel.rangeCount) return;
+            var node = sel.anchorNode;
+            while (node && node.parentNode !== editor) {
+                node = node.parentNode;
+            }
+            if (!node) return;
+            node.style.textAlign = align || '';
+            if (align && align !== 'left') {
+                node.setAttribute('data-align', align);
+            } else {
+                node.removeAttribute('data-align');
+            }
+            editor.focus();
+        }
 
         // ==================== INSERT FUNCTIONS ====================
         function doInsertTable(rows, cols, hasHead, hasRowHead) {
@@ -713,8 +764,14 @@ fmt.Println("Hallo")
                 }
 
                 // Regular text
-                if (trimmed) {
-                    html += '<div>' + inlineToHtml(trimmed) + '</div>';
+                var alignAttr = '';
+                var alignMatch = trimmed.match(/^:(center|right|justify):(.*)/);
+                if (alignMatch) {
+                    alignAttr = ' style="text-align:' + alignMatch[1] + '" data-align="' + alignMatch[1] + '"';
+                    trimmed = alignMatch[2];
+                }
+                if (trimmed || alignAttr) {
+                    html += '<div' + alignAttr + '>' + inlineToHtml(trimmed) + '</div>';
                 } else {
                     html += '<div><br></div>';
                 }
@@ -725,6 +782,8 @@ fmt.Println("Hallo")
 
         function inlineToHtml(text) {
             text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            text = text.replace(/__(.+?)__/g, '<u>$1</u>');
+            text = text.replace(/_(.+?)_/g, '<em>$1</em>');
             text = text.replace(/==(.+?)==/g, '<mark>$1</mark>');
             text = text.replace(/`(.+?)`/g, '<code>$1</code>');
             return text;
@@ -835,7 +894,9 @@ fmt.Println("Hallo")
                 if (node.classList && node.classList.contains('ed-block')) return ''; // handled above
                 var txt = serializeInline(node);
                 if (!txt && node.querySelector('br')) return '\n';
-                return txt + '\n';
+                var align = node.dataset.align || (node.style && node.style.textAlign) || '';
+                var prefix = (align && align !== 'left') ? (':' + align + ':') : '';
+                return prefix + txt + '\n';
             }
 
             // BR
@@ -855,6 +916,8 @@ fmt.Println("Hallo")
                 var inner = serializeInline(n);
                 switch(t) {
                     case 'STRONG': case 'B': result += '**' + inner + '**'; break;
+                    case 'EM': case 'I': result += '_' + inner + '_'; break;
+                    case 'U': result += '__' + inner + '__'; break;
                     case 'MARK': result += '==' + inner + '=='; break;
                     case 'CODE': result += '`' + inner + '`'; break;
                     case 'BR': break;

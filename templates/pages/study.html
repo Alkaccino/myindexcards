@@ -49,43 +49,55 @@
             </p>
             <div class="rating-container">
                 <form method="POST" action="/study/rate" style="display:contents;">
-                    <input type="hidden" name="card_id" value="{{$.Card.ID}}">
-                    <input type="hidden" name="deck_id" value="{{$.Deck.ID}}">
-                    <input type="hidden" name="r1" value="{{$.R1}}">
-                    <input type="hidden" name="r2" value="{{$.R2}}">
-                    <input type="hidden" name="r3" value="{{$.R3}}">
-                    <input type="hidden" name="r4" value="{{$.R4}}">
-                    <input type="hidden" name="r5" value="{{$.R5}}">
-                    {{if $.AllMode}}<input type="hidden" name="all" value="1">
-                    <input type="hidden" name="since" value="{{$.Since}}">{{end}}
-                    {{if $.T}}<input type="hidden" name="t" value="{{$.T}}">{{end}}
+                    <input type="hidden" name="card_id"    value="{{$.Card.ID}}">
+                    <input type="hidden" name="deck_id"    value="{{$.Deck.ID}}">
+                    <input type="hidden" name="q"          value="{{$.Q}}">
+                    <input type="hidden" name="t"          value="{{$.T}}">
+                    <input type="hidden" name="r1"         value="{{$.R1}}">
+                    <input type="hidden" name="r2"         value="{{$.R2}}">
+                    <input type="hidden" name="r3"         value="{{$.R3}}">
+                    <input type="hidden" name="r4"         value="{{$.R4}}">
+                    <input type="hidden" name="r5"         value="{{$.R5}}">
+                    {{if $.AllMode}}<input type="hidden" name="all" value="1">{{end}}
+                    {{if $.MixDecks}}<input type="hidden" name="mix_decks" value="{{$.MixDecks}}">{{end}}
 
                     <button type="submit" name="rating" value="1" class="rating-btn" data-rating="1">
                         <span class="rating-emoji">😵</span>
-                        <span class="rating-label">Keine Ahnung</span>
+                        <span class="rating-label">Nochmal</span>
+                        <span class="rating-hint">Gleich wieder</span>
                     </button>
                     <button type="submit" name="rating" value="2" class="rating-btn" data-rating="2">
                         <span class="rating-emoji">😰</span>
                         <span class="rating-label">Schwer</span>
+                        <span class="rating-hint">Am SessionEnde</span>
                     </button>
                     <button type="submit" name="rating" value="3" class="rating-btn" data-rating="3">
                         <span class="rating-emoji">🤔</span>
                         <span class="rating-label">Okay</span>
+                        <span class="rating-hint">In 1 Stunde</span>
                     </button>
                     <button type="submit" name="rating" value="4" class="rating-btn" data-rating="4">
                         <span class="rating-emoji">😊</span>
                         <span class="rating-label">Gut</span>
+                        <span class="rating-hint">In 1–2 Tagen</span>
                     </button>
                     <button type="submit" name="rating" value="5" class="rating-btn" data-rating="5">
                         <span class="rating-emoji">🌟</span>
-                        <span class="rating-label">Perfekt</span>
+                        <span class="rating-label">Einfach</span>
+                        <span class="rating-hint">In 5+ Tagen</span>
                     </button>
                 </form>
             </div>
             {{else}}
-            <a href="/study/{{.Deck.ID}}?reveal=1&card={{.Card.ID}}&r1={{.R1}}&r2={{.R2}}&r3={{.R3}}&r4={{.R4}}&r5={{.R5}}{{if .AllMode}}&all=1&since={{.Since}}{{end}}{{if .T}}&t={{.T}}{{end}}" class="btn btn-primary" style="font-size: 1.1rem; padding: 0.9rem 2.5rem;">
+            {{if $.MixDecks}}
+            <a href="/study/mix?reveal=1&card={{.Card.ID}}&q={{.Q}}&t={{.T}}&r1={{.R1}}&r2={{.R2}}&r3={{.R3}}&r4={{.R4}}&r5={{.R5}}&decks={{.MixDecks}}{{if .AllMode}}&all=1{{end}}" class="btn btn-primary" style="font-size: 1.1rem; padding: 0.9rem 2.5rem;">
                 Antwort zeigen
             </a>
+            {{else}}
+            <a href="/study/{{.Deck.ID}}?reveal=1&card={{.Card.ID}}&q={{.Q}}&t={{.T}}&r1={{.R1}}&r2={{.R2}}&r3={{.R3}}&r4={{.R4}}&r5={{.R5}}{{if .AllMode}}&all=1{{end}}" class="btn btn-primary" style="font-size: 1.1rem; padding: 0.9rem 2.5rem;">
+                Antwort zeigen
+            </a>
+            {{end}}
             {{end}}
         </div>
     </div>

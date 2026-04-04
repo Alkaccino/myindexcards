@@ -9,7 +9,7 @@
 </head>
 <body>
     <nav class="navbar">
-        <div class="container">
+        <div class="container container--wide">
             <a href="/" class="navbar-brand">🃏 <span>MYIndexCards</span></a>
             <div class="navbar-links">
                 <span class="navbar-user">{{.User.Username}}</span>
@@ -18,7 +18,7 @@
         </div>
     </nav>
 
-    <div class="container">
+    <div class="container container--wide">
         <div class="page-header">
             <div>
                 <h1 class="page-title">
@@ -35,9 +35,13 @@
                 <a href="/card/create/{{.Deck.ID}}" class="btn btn-secondary">+ Karte</a>
                 <a href="/deck/edit/{{.Deck.ID}}" class="btn btn-secondary">✏️ Bearbeiten</a>
                 <a href="/export/{{.Deck.ID}}" class="btn btn-secondary">📤 Export</a>
+                <form method="POST" action="/deck/reset/{{.Deck.ID}}" class="inline-form"
+                      onsubmit="return confirm('Lernfortschritt zurücksetzen? Alle Karten werden wieder als neu markiert.')">
+                    <button type="submit" class="btn btn-secondary" title="Fortschritt zurücksetzen">🔄</button>
+                </form>
                 <form method="POST" action="/deck/delete/{{.Deck.ID}}" class="inline-form"
                       onsubmit="return confirm('Stapel wirklich löschen? Alle Karten gehen verloren.')">
-                    <button type="submit" class="btn btn-danger btn-sm">🗑</button>
+                    <button type="submit" class="btn btn-danger">🗑</button>
                 </form>
             </div>
         </div>
