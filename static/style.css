@@ -374,6 +374,33 @@ a:hover {
     background: rgba(248,113,113,0.1);
 }
 
+/* Image Paste Zone */
+.ic-paste-zone {
+    padding: 0.35rem 0.85rem;
+    border: 1.5px dashed var(--border);
+    border-radius: 5px;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    cursor: pointer;
+    text-align: center;
+    background: var(--bg-input);
+    outline: none;
+    transition: border-color var(--transition), color var(--transition), background var(--transition);
+    white-space: nowrap;
+}
+.ic-paste-zone:hover,
+.ic-paste-zone:focus,
+.ic-paste-zone--hover {
+    border-color: var(--accent);
+    color: var(--accent-light);
+    background: rgba(108, 92, 231, 0.07);
+}
+.ic-or {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    white-space: nowrap;
+}
+
 /* --- WYSIWYG Editor Area --- */
 .editor-wysiwyg {
     min-height: 220px;

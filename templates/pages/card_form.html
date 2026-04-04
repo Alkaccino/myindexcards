@@ -77,6 +77,10 @@
                         <button type="button" class="ec-btn ec-cancel" id="tc-cancel">✕</button>
                     </div>
                     <div class="editor-config" id="image-config">
+                        <div id="ic-paste-zone" class="ic-paste-zone" tabindex="0">
+                            📋 Strg+V&nbsp;&nbsp;·&nbsp;&nbsp;Reinziehen&nbsp;&nbsp;·&nbsp;&nbsp;Klicken
+                        </div>
+                        <span class="ic-or">— oder URL —</span>
                         <label>URL <input type="text" id="ic-url" placeholder="https://..." class="ec-input-wide"></label>
                         <label>Alt <input type="text" id="ic-alt" placeholder="Beschreibung" class="ec-input-med"></label>
                         <button type="button" class="ec-btn" id="ic-go">Einfügen</button>
@@ -164,6 +168,19 @@ fmt.Println("Hallo")
 
         // ==================== PASTE ====================
         editor.addEventListener('paste', function(e) {
+            var items = (e.clipboardData || window.clipboardData).items;
+            if (items) {
+                for (var i = 0; i < items.length; i++) {
+                    if (items[i].type.indexOf('image') !== -1) {
+                        e.preventDefault();
+                        var file = items[i].getAsFile();
+                        var reader = new FileReader();
+                        reader.onload = function(evt) { insertImage(evt.target.result, 'Bild'); };
+                        reader.readAsDataURL(file);
+                        return;
+                    }
+                }
+            }
             e.preventDefault();
             var text = (e.clipboardData || window.clipboardData).getData('text/plain');
             document.execCommand('insertText', false, text);
@@ -304,10 +321,64 @@ fmt.Println("Hallo")
         });
         document.getElementById('ic-cancel').addEventListener('click', function(){ hideConfig('image-config'); });
 
+        // ==================== IMAGE PASTE ZONE ====================
+        (function() {
+            var zone = document.getElementById('ic-paste-zone');
+            function handleImageFile(file) {
+                var reader = new FileReader();
+                reader.onload = function(evt) {
+                    insertImage(evt.target.result, 'Bild');
+                    hideConfig('image-config');
+                };
+                reader.readAsDataURL(file);
+            }
+            zone.addEventListener('paste', function(e) {
+                var items = (e.clipboardData || window.clipboardData).items;
+                if (!items) return;
+                for (var i = 0; i < items.length; i++) {
+                    if (items[i].type.indexOf('image') !== -1) {
+                        e.preventDefault();
+                        handleImageFile(items[i].getAsFile());
+                        return;
+                    }
+                }
+            });
+            zone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                zone.classList.add('ic-paste-zone--hover');
+            });
+            zone.addEventListener('dragleave', function() {
+                zone.classList.remove('ic-paste-zone--hover');
+            });
+            zone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                zone.classList.remove('ic-paste-zone--hover');
+                var files = e.dataTransfer.files;
+                for (var i = 0; i < files.length; i++) {
+                    if (files[i].type.indexOf('image') !== -1) {
+                        handleImageFile(files[i]);
+                        return;
+                    }
+                }
+            });
+            zone.addEventListener('click', function() {
+                var input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/*';
+                input.onchange = function() {
+                    if (input.files && input.files[0]) handleImageFile(input.files[0]);
+                };
+                input.click();
+            });
+        })();
+
         // ==================== CONFIG SHOW/HIDE ====================
         function showConfig(id) {
             document.querySelectorAll('.editor-config').forEach(function(el){ el.style.display = 'none'; });
             document.getElementById(id).style.display = 'flex';
+            if (id === 'image-config') {
+                setTimeout(function() { document.getElementById('ic-paste-zone').focus(); }, 50);
+            }
         }
         function hideConfig(id) { document.getElementById(id).style.display = 'none'; }
 
